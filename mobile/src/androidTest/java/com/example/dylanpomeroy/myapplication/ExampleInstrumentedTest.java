@@ -8,6 +8,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static org.junit.Assert.*;
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
+
+import static android.support.test.espresso.action.ViewActions.clearText;
+import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.replaceText;
 
 /**
  * Instrumentation test, which will execute on an Android device.
@@ -23,4 +32,26 @@ public class ExampleInstrumentedTest {
 
         assertEquals("com.example.dylanpomeroy.myapplication", appContext.getPackageName());
     }
+    @Test
+    public void heartrateMeterButton() throws Exception {
+        //Clickbutton
+        onView(withId(R.id.imageButton1)).perform(click());
+        //matchDisplay
+        onView(withId(R.id.container_current)).check(matches(R.layout.activity_heartrate));
+    }
+    @Test
+    public void pedometerButton() throws Exception {
+        //Clickbutton
+        onView(withId(R.id.imageButton2)).perform(click());
+        //matchDisplay
+        onView(withId(R.id.container_current)).check(matches(R.layout.activity_pedometer));
+    }
+    @Test
+    public void historyButton() throws Exception {
+        //Clickbutton
+        onView(withId(R.id.imageButton3)).perform(click());
+        //matchDisplay
+        onView(withId(R.id.container_current)).check(matches(R.layout.activity_history));
+    }
+
 }
