@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.dylanpomeroy.myapplication.PedometerActivity">
+
+    <TextView
+        android:id="@+id/text_high"
+        android:layout_width="71dp"
+        android:layout_height="56dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="4dp"
+        android:text="Low"
+        android:textSize="24sp"
+        app:layout_constraintHorizontal_bias="0.44"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/seekBarHigh"
+        app:layout_constraintTop_toBottomOf="@+id/text_low" />
+
+    <TextView
+        android:id="@+id/text_low"
+        android:layout_width="71dp"
+        android:layout_height="56dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="8dp"
+        android:text="High"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.444"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/seekBarHigh"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@+id/text_set_range"
+        app:layout_constraintVertical_bias="0.062" />
+
+    <TextView
+        android:id="@+id/text_set_range"
+        android:layout_width="151dp"
+        android:layout_height="45dp"
+        android:text="Set Range"
+        android:textSize="24sp"
+        android:layout_marginTop="97dp"
+        app:layout_constraintTop_toBottomOf="@+id/text_steps"
+        android:layout_marginLeft="40dp"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <TextView
+        android:id="@+id/text_steps"
+        android:layout_width="306dp"
+        android:layout_height="46dp"
+        android:layout_marginTop="32dp"
+        android:text="500 Steps"
+        android:textAlignment="center"
+        android:textSize="30sp"
+        app:layout_constraintHorizontal_bias="0.506"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <SeekBar
+        android:id="@+id/seekBarHigh"
+        style="@style/Widget.AppCompat.SeekBar.Discrete"
+        android:layout_width="208dp"
+        android:layout_height="52dp"
+        android:layout_marginBottom="230dp"
+        android:layout_marginTop="30dp"
+        android:max="10"
+        android:progress="3"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.677"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_set_range"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <SeekBar
+        android:id="@+id/seekBarLow"
+        style="@style/Widget.AppCompat.SeekBar.Discrete"
+        android:layout_width="208dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="17dp"
+        android:max="10"
+        android:progress="7"
+        app:layout_constraintHorizontal_bias="0.677"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/seekBarHigh" />
+
+</android.support.constraint.ConstraintLayout>
