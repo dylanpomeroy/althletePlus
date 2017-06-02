@@ -10,31 +10,25 @@
         android:id="@+id/text_high"
         android:layout_width="71dp"
         android:layout_height="56dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="15dp"
         android:text="Low"
         android:textSize="24sp"
-        app:layout_constraintHorizontal_bias="0.44"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/seekBarHigh"
         app:layout_constraintTop_toBottomOf="@+id/text_low" />
 
     <TextView
         android:id="@+id/text_low"
         android:layout_width="71dp"
         android:layout_height="56dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginLeft="40dp"
         android:text="High"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.444"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/seekBarHigh"
         android:layout_marginTop="10dp"
         app:layout_constraintTop_toBottomOf="@+id/text_set_range"
-        app:layout_constraintVertical_bias="0.062" />
+        app:layout_constraintVertical_bias="0.08" />
 
     <TextView
         android:id="@+id/text_set_range"
@@ -42,7 +36,7 @@
         android:layout_height="45dp"
         android:text="Set Range"
         android:textSize="24sp"
-        android:layout_marginTop="97dp"
+        android:layout_marginTop="54dp"
         app:layout_constraintTop_toBottomOf="@+id/text_steps"
         android:layout_marginLeft="40dp"
         app:layout_constraintLeft_toLeftOf="parent" />
@@ -60,35 +54,6 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <SeekBar
-        android:id="@+id/seekBarHigh"
-        style="@style/Widget.AppCompat.SeekBar.Discrete"
-        android:layout_width="208dp"
-        android:layout_height="52dp"
-        android:layout_marginBottom="230dp"
-        android:layout_marginTop="30dp"
-        android:max="10"
-        android:progress="3"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.677"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_set_range"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <SeekBar
-        android:id="@+id/seekBarLow"
-        style="@style/Widget.AppCompat.SeekBar.Discrete"
-        android:layout_width="208dp"
-        android:layout_height="52dp"
-        android:layout_marginTop="17dp"
-        android:max="10"
-        android:progress="7"
-        app:layout_constraintHorizontal_bias="0.677"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/seekBarHigh" />
-
     <Button
         android:id="@+id/pedometer_to_main"
         android:layout_width="wrap_content"
@@ -98,5 +63,42 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
+
+    <EditText
+        android:id="@+id/low_input"
+        android:layout_width="141dp"
+        android:layout_height="47dp"
+        android:ems="10"
+        android:inputType="number"
+        tools:layout_editor_absoluteX="144dp"
+        tools:layout_editor_absoluteY="280dp" />
+
+    <EditText
+        android:id="@+id/high_input"
+        android:layout_width="141dp"
+        android:layout_height="47dp"
+        android:ems="10"
+        android:inputType="number"
+        tools:layout_editor_absoluteX="144dp"
+        tools:layout_editor_absoluteY="209dp" />
+
+    <Button
+        android:id="@+id/update_range"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Update Range"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:layout_editor_absoluteY="387dp"
+        app:layout_constraintHorizontal_bias="0.249" />
+
+    <Button
+        android:id="@+id/reset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="74dp"
+        android:text="Reset"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:layout_editor_absoluteY="387dp" />
 
 </android.support.constraint.ConstraintLayout>
