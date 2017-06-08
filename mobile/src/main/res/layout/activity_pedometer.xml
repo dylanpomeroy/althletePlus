@@ -11,15 +11,13 @@
         android:layout_width="71dp"
         android:layout_height="56dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="0dp"
         android:text="Low"
         android:textSize="24sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_low"
         app:layout_constraintRight_toLeftOf="@+id/low_input"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/update_range" />
+        android:layout_marginRight="8dp" />
 
     <TextView
         android:id="@+id/text_low"
@@ -30,7 +28,7 @@
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="0dp"
         app:layout_constraintTop_toBottomOf="@+id/text_set_range"
         app:layout_constraintVertical_bias="0.079"
         app:layout_constraintRight_toLeftOf="@+id/high_input"
@@ -55,7 +53,7 @@
         android:layout_width="306dp"
         android:layout_height="46dp"
         android:layout_marginTop="8dp"
-        android:text="500 Steps"
+        android:text="Total Steps: 500"
         android:textAlignment="center"
         android:textSize="30sp"
         app:layout_constraintHorizontal_bias="0.512"
@@ -67,12 +65,13 @@
         android:id="@+id/pedometer_to_main"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:onClick="returnToMain"
         android:text="Return to Main"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="8dp" />
 
     <EditText
         android:id="@+id/low_input"
@@ -84,8 +83,9 @@
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toTopOf="@+id/reset"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/high_input" />
+        android:layout_marginTop="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/high_input"
+        app:layout_constraintVertical_bias="0.131" />
 
     <EditText
         android:id="@+id/high_input"
@@ -95,29 +95,34 @@
         android:inputType="number"
         android:layout_marginRight="52dp"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="25dp"
         app:layout_constraintTop_toBottomOf="@+id/text_set_range" />
 
     <Button
         android:id="@+id/update_range"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Update Range"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintHorizontal_bias="0.155"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/pedometer_to_main" />
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:onClick="updateRange"
+        android:text="Update Range"
+        app:layout_constraintBottom_toTopOf="@+id/reset"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
     <Button
         android:id="@+id/reset"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="88dp"
-        android:onClick="reset"
-        android:text="Reset"
-        app:layout_constraintRight_toRightOf="parent"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/pedometer_to_main" />
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:onClick="reset"
+        android:text="Reset Steps"
+        app:layout_constraintBottom_toTopOf="@+id/pedometer_to_main"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

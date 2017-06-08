@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 public class PedometerActivity extends FragmentActivity {
 
+    static int rangeHigh,rangeLow;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -18,7 +20,7 @@ public class PedometerActivity extends FragmentActivity {
 
     protected void reset(View view){
         TextView textView = (TextView) findViewById(R.id.text_steps);
-        textView.setText("0 Steps");
+        textView.setText("Total Steps: 0");
     }
 
     public void returnToMain(View view) {
@@ -27,9 +29,23 @@ public class PedometerActivity extends FragmentActivity {
     }
 
     public void updateRange(View view){
-        TextView textViewlow = (TextView) findViewById(R.id.low_input);
-        TextView textViewhigh = (TextView) findViewById(R.id.high_input);
+
+        //read text from high_input and convert to string
+        EditText textHigh = (EditText) findViewById(R.id.high_input);
+        String highString = textHigh.getText().toString();
+
+        //read text from low_input and convert to string
+        EditText textLow = (EditText) findViewById(R.id.low_input);
+        String lowString = textLow.getText().toString();
+
+        //if the string is not empty, set the static range variable to the parsed int
+        //only numbers are able to be entered becasue the input type is number
+        if(!highString.equals("")) rangeHigh=Integer.parseInt(highString);
+        else rangeHigh=0;
+        if(!lowString.equals("")) rangeLow=Integer.parseInt(lowString);
+        else rangeLow=0;
 
         //take text and enter in database
+        //enter variables rangeHigh and rangeLow into database
     }
 }

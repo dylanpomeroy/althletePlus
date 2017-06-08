@@ -25,6 +25,7 @@ import static org.junit.Assert.*;
  */
 @RunWith(AndroidJUnit4.class)
 public class ExampleInstrumentedTest {
+
     @Test
     public void useAppContext() throws Exception {
         // Context of the app under test.
@@ -34,7 +35,7 @@ public class ExampleInstrumentedTest {
     }
 
     @Test
-    public void pedometerBuntton()throws Exception{
+    public void pedometerButton()throws Exception{
         onView(withId(R.id.pedometer_to_main)).perform(click());
         //onView(withId(R.id.container_current)).check(matches(R.layout.activity_main));
 
@@ -42,9 +43,8 @@ public class ExampleInstrumentedTest {
     }
 
     @Test
-    public void checHigh() throws Exception{
+    public void checkHigh() throws Exception{
         onView(withId(R.id.high_input)).perform(typeText(String.valueOf("15")));
-
         onView(withId(R.id.high_input)).check(matches(withText("15")));
     }
 
@@ -59,7 +59,7 @@ public class ExampleInstrumentedTest {
     @Test
     public void reset()throws Exception{
         onView(withId(R.id.reset)).perform(click());
-        onView(withId(R.id.text_steps)).check(matches(withText("0 Steps")));
+        onView(withId(R.id.text_steps)).check(matches(withText("Total Steps: 0")));
     }
 
 
