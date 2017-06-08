@@ -52,9 +52,7 @@
             android:name=".activity.MainActivity_"
             android:label="@string/discovery_available_devices"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.ReadingsActivity_"
             android:label="@string/readings_activity_title"

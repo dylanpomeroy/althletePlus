@@ -22,15 +22,30 @@ package com.wolkabout.hexiwear.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.wolkabout.hexiwear.R;
+import com.wolkabout.hexiwear.util.Dialog;
+import com.wolkabout.hexiwear.view.Input;
 import com.wolkabout.wolkrestandroid.Credentials_;
 import com.wolkabout.wolkrestandroid.dto.AuthenticationResponseDto;
+import com.wolkabout.wolkrestandroid.dto.EmailVerificationRequest;
 import com.wolkabout.wolkrestandroid.dto.SignInDto;
 import com.wolkabout.wolkrestandroid.service.AuthenticationService;
 
+import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.EditorAction;
+import org.androidannotations.annotations.SystemService;
+import org.androidannotations.annotations.UiThread;
+import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 import org.androidannotations.rest.spring.annotations.RestService;
 import org.springframework.http.HttpStatus;
@@ -41,13 +56,20 @@ public class LoginActivity extends AppCompatActivity {
 
     public static final String TAG = LoginActivity.class.getSimpleName();
 
+    @ViewById
+    Input emailField;
+
+    @ViewById
+    Input passwordField;
+
     @Pref
     Credentials_ credentials;
 
     @RestService
     AuthenticationService authenticationService;
 
-    public void onCreate(){
+    @Click(R.id.signInButton)
+     void attemptSignIn(){
         signIn();
     }
 
