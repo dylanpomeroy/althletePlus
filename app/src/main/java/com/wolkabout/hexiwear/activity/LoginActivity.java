@@ -69,7 +69,12 @@ public class LoginActivity extends AppCompatActivity {
     AuthenticationService authenticationService;
 
     @Click(R.id.signInButton)
-     void attemptSignIn(){
+    void attemptSignIn(){
+        signIn();
+    }
+
+    @AfterViews
+    void afterViewThing(){
         signIn();
     }
 

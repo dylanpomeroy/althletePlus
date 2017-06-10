@@ -19,6 +19,6 @@
         android:layout_gravity="end"
         android:layout_marginTop="@dimen/min_margin"
         android:gravity="center"
-        android:text="@string/login_sign_in"
+        android:text="Welcome to the Future."
         android:textColor="@color/white" />
 </LinearLayout>
