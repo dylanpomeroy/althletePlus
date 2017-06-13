@@ -26,6 +26,7 @@ import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -33,6 +34,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -159,6 +161,11 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
         shouldUnpair = false;
         invalidateOptionsMenu();
         setReadingVisibility(mode);
+    }
+
+    public void switchToPedometer(View view) {
+        Intent intent = new Intent(this, PedometerActivity.class);
+        startActivity(intent);
     }
 
     @Receiver(actions = BluetoothService.MODE_CHANGED, local = true)
