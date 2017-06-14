@@ -138,11 +138,11 @@
                     app:readingType="gyro"/>
 
                 <Button
-                    android:id="@+id/button2"
+                    android:id="@+id/pedometer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:onClick="switchToPedometer()"
-                    android:text="Button" />
+                    android:text="Pedometer" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

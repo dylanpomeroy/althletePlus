@@ -6,6 +6,14 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import com.wolkabout.hexiwear.R;
+import com.wolkabout.hexiwear.model.Characteristic;
+import com.wolkabout.hexiwear.model.Mode;
+import com.wolkabout.hexiwear.view.Reading;
+import com.wolkabout.hexiwear.view.SingleReading;
+
+import org.androidannotations.annotations.ViewById;
+
+import java.util.Map;
 
 /**
  * Created by thomasrs on 2017-06-13.
@@ -20,13 +28,21 @@ public class PedometerActivity extends ReadingsActivity{
         setContentView(R.layout.activity_pedometer);
     }
 
+    //reading the steps from hexiwear from readings activity
+
+    private void setPedometerVisibility(final Mode mode) {
+        final Map<String, Boolean> displayPreferences = hexiwearDevices.getDisplayPreferences(device.getAddress());
+        final Reading pedometer = readingSteps;
+        pedometer.setVisibility(displayPreferences.get(readingSteps.getReadingType().name()) && mode.hasCharacteristic(readingSteps.getReadingType()) ? View.VISIBLE : View.GONE);
+    }
+
     protected void reset(View view){
         TextView textView = (TextView) findViewById(R.id.text_steps);
         textView.setText("Total Steps: 0");
     }
 
     public void returnToMain(View view) {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, ReadingsActivity.class);
         startActivity(intent);
     }
 
