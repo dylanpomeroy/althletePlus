@@ -34,6 +34,9 @@ public class PedometerActivity extends ReadingsActivity{
         final Map<String, Boolean> displayPreferences = hexiwearDevices.getDisplayPreferences(device.getAddress());
         final Reading pedometer = readingSteps;
         pedometer.setVisibility(displayPreferences.get(readingSteps.getReadingType().name()) && mode.hasCharacteristic(readingSteps.getReadingType()) ? View.VISIBLE : View.GONE);
+        //puts value in text_steps
+        TextView textView = (TextView) findViewById(R.id.text_steps);
+        textView.setText("Total Steps: "+pedometer.toString());
     }
 
     protected void reset(View view){
