@@ -53,7 +53,9 @@
                 android:layout_height="match_parent"
                 android:divider="@color/primary"
                 android:dividerHeight="1dp"
-                android:scrollbars="vertical"/>
+                android:scrollbars="vertical"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true" />
 
             <TextView
                 android:id="@+id/emptyListView"
