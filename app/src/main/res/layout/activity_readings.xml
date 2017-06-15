@@ -61,6 +61,13 @@
                 android:text="Connecting..."
                 android:textAppearance="?android:attr/textAppearanceMedium"/>
 
+            <Button
+                android:id="@+id/pedometer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="switchToPedometer()"
+                android:text="Pedometer" />
+
             <LinearLayout
                 android:id="@+id/readings"
                 android:layout_width="match_parent"
@@ -144,12 +151,6 @@
                     app:image="@drawable/ic_gyroscope"
                     app:readingType="gyro"/>
 
-                <Button
-                    android:id="@+id/pedometer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:onClick="switchToPedometer()"
-                    android:text="Pedometer" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
