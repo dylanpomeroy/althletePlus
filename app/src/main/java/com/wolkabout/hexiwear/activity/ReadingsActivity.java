@@ -26,6 +26,7 @@ import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -53,6 +54,7 @@ import com.wolkabout.wolkrestandroid.Credentials_;
 import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.OptionsItem;
@@ -136,6 +138,23 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
     private boolean isBound;
     private Mode mode = Mode.IDLE;
     private boolean shouldUnpair;
+
+    private int notificationCount = 0;
+
+    @Click(R.id.doTheThingButton)
+    public void doTheThing(){
+        bluetoothService.queueNotification((byte) 2, notificationCount);
+        final Handler handler = new Handler();
+        for (int i = 0; i < 10; i++){
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run(){
+                    bluetoothService.queueNotification((byte) 2, notificationCount);
+                }
+            }, 500);
+        }
+        notificationCount++;
+    }
 
     @AfterInject
     void startService() {
