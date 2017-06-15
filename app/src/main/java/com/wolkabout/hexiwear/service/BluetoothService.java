@@ -397,7 +397,7 @@ public class BluetoothService extends Service {
         queueNotification(UNREAD_EMAILS, value);
     }
 
-    private void queueNotification(final byte type, final int amount) {
+    public void queueNotification(final byte type, final int amount) {
         final byte[] notification = new byte[20];
         notification[0] = WRITE_NOTIFICATION;
         notification[1] = type;
