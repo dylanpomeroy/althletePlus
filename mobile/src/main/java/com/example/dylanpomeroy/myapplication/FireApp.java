@@ -4,8 +4,10 @@ import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class FireApp implements Serializable {
 
@@ -24,12 +26,16 @@ public class FireApp implements Serializable {
 
     }
 
-//    @Exclude
-//    public Map<String, Object> toMap(){
-//        HashMap<String, Object> result = new HashMap<>();
-//        result.put("uid", uid);
-//        result.put("name", name);
-//
-//        return result;
-//    }
-}
+    public Map<String, Object> toMap(){
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("uid", uid);
+        result.put("number1",number1);
+        result.put("number2",number2 );
+        result.put("number3",number3 );
+        result.put("number4",number4 );
+
+        return result;
+    }
+
+    }
+

@@ -56,12 +56,12 @@ public class UserStory6Main extends AppCompatActivity {
         click2.setOnClickListener(new View.OnClickListener() { //under test at the moment
             @Override
             public void onClick(View v) {
-                firebaseDatabase.getReference("Name").addListenerForSingleValueEvent(new ValueEventListener() {
+                mRootReference.child("Name").child("-KmgV7tP4NKoK_dmsOlN").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        for(DataSnapshot dsp: dataSnapshot.getChildren()){
-                            FireApp post = (FireApp) dsp.getValue();
-                        }
+
+                        FireApp data = dataSnapshot.getValue(FireApp.class);
+                        pullData.setText(dataSnapshot.getValue().toString());
                     }
 
                     @Override
@@ -69,12 +69,9 @@ public class UserStory6Main extends AppCompatActivity {
 
                     }
                 });
-
             }
 
         });
-
-
 
         }
 
