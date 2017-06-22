@@ -172,7 +172,7 @@ public class HexiwearDevices {
     }
 
     public boolean shouldTransmit(final BluetoothDevice device) {
-        return preferences.getBoolean(device.getAddress() + SHOULD_TRANSMIT_SUFFIX, false);
+        return true; // preferences.getBoolean(device.getAddress() + SHOULD_TRANSMIT_SUFFIX, false);
     }
 
     public boolean shouldTransmit(final HexiwearDevice device) {

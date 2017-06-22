@@ -169,10 +169,10 @@ public class BluetoothService extends Service {
     }
 
     public void startReading(BluetoothDevice device) {
-        Log.i(TAG, "Starting to read data for device: " + device.getName());
-        hexiwearDevice = hexiwearDevices.getDevice(device.getAddress());
+        Log.i(TAG, "Starting to read data for device: " /*+ device.getName()*/);
+        hexiwearDevice = new HexiwearDevice(); // hexiwearDevices.getDevice(device.getAddress());
         bluetoothDevice = device;
-        createGATT(device);
+        // createGATT(device);
 
         if (credentials.username().get().equals("Demo")) {
             return;
