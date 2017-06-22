@@ -99,6 +99,7 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
     @ViewById
     SingleReading readingPressure;
 
+    public static String readingHeartRateValue = "Oh No";
     @ViewById
     SingleReading readingHeartRate;
 
@@ -151,6 +152,12 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
     @Click(R.id.btnPedometer)
     public void switchToPedometer(View view) {
         Intent intent = new Intent(getBaseContext(), PedometerActivity_.class);
+        startActivity(intent);
+    }
+
+    @Click(R.id.btnHeartRate)
+    public void switchToHeartRate(View view) {
+        Intent intent = new Intent(getBaseContext(), HeartRateActivity_.class);
         startActivity(intent);
     }
 
@@ -349,6 +356,7 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
                 break;
             case HEARTRATE:
                 readingHeartRate.setValue(data);
+                readingHeartRateValue = data;
                 break;
             case LIGHT:
                 readingLight.setValue(data);

@@ -61,6 +61,12 @@
                 android:text="Pedometer" />
 
             <Button
+                android:id="@+id/btnHeartRate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Heartrate" />
+
+            <Button
                 android:id="@+id/btnAlertAlthlete"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
