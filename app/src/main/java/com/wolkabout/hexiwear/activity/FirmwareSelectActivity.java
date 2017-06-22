@@ -85,7 +85,6 @@ public class FirmwareSelectActivity extends AppCompatActivity implements Service
     private ProgressDialog progressDialog;
     private FirmwareUpdateService firmwareUpdateService;
 
-    @AfterViews
     void init() {
         setSupportActionBar(toolbar);
         firmwareList.setAdapter(adapter);

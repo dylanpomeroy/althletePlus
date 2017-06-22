@@ -51,6 +51,7 @@ import com.wolkabout.wolkrestandroid.Credentials_;
 import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ItemClick;
 import org.androidannotations.annotations.ItemLongClick;
@@ -105,6 +106,12 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
     Dialog dialog;
 
     private boolean serviceBound;
+
+    @Click(R.id.btnSkipPairing)
+    void skipPairing(){
+        ReadingsActivity.skippingHexiConnection = true;
+        ReadingsActivity_.intent(MainActivity.this).start();
+    }
 
     @AfterInject
     void setStore() {

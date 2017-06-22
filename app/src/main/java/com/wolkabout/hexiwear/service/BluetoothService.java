@@ -43,6 +43,7 @@ import android.widget.Toast;
 import com.wolkabout.hexiwear.BuildConfig;
 import com.wolkabout.hexiwear.R;
 import com.wolkabout.hexiwear.activity.MainActivity_;
+import com.wolkabout.hexiwear.activity.ReadingsActivity;
 import com.wolkabout.hexiwear.activity.ReadingsActivity_;
 import com.wolkabout.hexiwear.model.Characteristic;
 import com.wolkabout.hexiwear.model.HexiwearDevice;
@@ -169,10 +170,19 @@ public class BluetoothService extends Service {
     }
 
     public void startReading(BluetoothDevice device) {
-        Log.i(TAG, "Starting to read data for device: " + device.getName());
-        hexiwearDevice = hexiwearDevices.getDevice(device.getAddress());
+        String deviceName = "";
+        if (ReadingsActivity.skippingHexiConnection) {
+            deviceName = "no existing device :)";
+            hexiwearDevice = new HexiwearDevice();
+        }
+        else {
+            deviceName = device.getName();
+            hexiwearDevice = hexiwearDevices.getDevice(device.getAddress());
+        }
+        Log.i(TAG, "Starting to read data for device: " + deviceName);
         bluetoothDevice = device;
-        createGATT(device);
+        if (!ReadingsActivity.skippingHexiConnection)
+            createGATT(device);
 
         if (credentials.username().get().equals("Demo")) {
             return;

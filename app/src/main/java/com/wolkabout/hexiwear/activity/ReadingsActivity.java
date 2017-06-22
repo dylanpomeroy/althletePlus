@@ -26,6 +26,7 @@ import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Color;
 import android.os.Handler;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -35,6 +36,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -74,6 +76,8 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
 
     private static final String TAG = ReadingsActivity.class.getSimpleName();
 
+    public static boolean skippingHexiConnection = false;
+
     @Extra
     BluetoothDevice device;
 
@@ -101,6 +105,7 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
     @ViewById
     SingleReading readingLight;
 
+    public static String readingStepsValue = "Oh yay";
     @ViewById
     SingleReading readingSteps;
 
@@ -143,8 +148,20 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
 
     private int notificationCount = 0;
 
-    @Click(R.id.doTheThingButton)
-    public void doTheThing(){
+    @Click(R.id.btnPedometer)
+    public void switchToPedometer(View view) {
+        Intent intent = new Intent(getBaseContext(), PedometerActivity_.class);
+        startActivity(intent);
+    }
+
+    @Click(R.id.btnAlertAlthlete)
+    public void alertAlthlete(){
+        // modify button appearance
+        final Button button = (Button)findViewById(R.id.btnAlertAlthlete);
+        button.setBackgroundColor(Color.YELLOW);
+        button.setText("Alerting Althete...");
+        button.setEnabled(false);
+
         bluetoothService.queueNotification((byte) 2, notificationCount);
         final Handler handler = new Handler();
         for (int i = 0; i < 10; i++){
@@ -153,14 +170,28 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
                 public void run(){
                     bluetoothService.queueNotification((byte) 2, notificationCount);
                 }
-            }, 500);
+            }, i * 100);
         }
+
+        // set button appearance back to normal
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run(){
+                button.setBackgroundResource(android.R.drawable.btn_default);
+                button.setText("Alert Althlete");
+                button.setEnabled(true);
+            }
+        }, 2000);
+
         notificationCount++;
     }
 
     @AfterInject
     void startService() {
-        hexiwearDevice = hexiwearDevices.getDevice(device.getAddress());
+        if (skippingHexiConnection)
+            hexiwearDevice = new HexiwearDevice();
+        else
+            hexiwearDevice = hexiwearDevices.getDevice(device.getAddress());
         if (hexiwearDevices.shouldKeepAlive(hexiwearDevice)) {
             BluetoothService_.intent(this).start();
         }
@@ -180,11 +211,6 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
         shouldUnpair = false;
         invalidateOptionsMenu();
         setReadingVisibility(mode);
-    }
-
-    public void switchToPedometer(View view) {
-        Intent intent = new Intent(this, PedometerActivity.class);
-        startActivity(intent);
     }
 
     @Receiver(actions = BluetoothService.MODE_CHANGED, local = true)
@@ -237,12 +263,19 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
     }
 
     private void setReadingVisibility(final Mode mode) {
-        final Map<String, Boolean> displayPreferences = hexiwearDevices.getDisplayPreferences(device.getAddress());
-        for (int i = 0; i < readings.getChildCount(); i++) {
-            final Reading reading = (Reading) readings.getChildAt(i);
-            final Characteristic readingType = reading.getReadingType();
-            final boolean readingEnabled = displayPreferences.get(readingType.name());
-            reading.setVisibility(readingEnabled && mode.hasCharacteristic(readingType) ? View.VISIBLE : View.GONE);
+        Map<String, Boolean> displayPreferences = null;
+        if (!skippingHexiConnection) {
+            displayPreferences = hexiwearDevices.getDisplayPreferences(device.getAddress());
+            for (int i = 0; i < readings.getChildCount(); i++) {
+                final Reading reading = (Reading) readings.getChildAt(i);
+                final Characteristic readingType = reading.getReadingType();
+                final boolean readingEnabled;
+                if (skippingHexiConnection)
+                    readingEnabled = true;
+                else
+                    readingEnabled = displayPreferences.get(readingType.name());
+                reading.setVisibility(readingEnabled && mode.hasCharacteristic(readingType) ? View.VISIBLE : View.GONE);
+            }
         }
     }
 
@@ -322,6 +355,7 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
                 break;
             case STEPS:
                 readingSteps.setValue(data);
+                readingStepsValue = data;
                 break;
             case CALORIES:
                 readingCalories.setValue(data);

@@ -1,5 +1,6 @@
 package com.wolkabout.hexiwear.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -11,6 +12,9 @@ import com.wolkabout.hexiwear.model.Mode;
 import com.wolkabout.hexiwear.view.Reading;
 import com.wolkabout.hexiwear.view.SingleReading;
 
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Click;
+import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.Map;
@@ -18,8 +22,8 @@ import java.util.Map;
 /**
  * Created by thomasrs on 2017-06-13.
  */
-
-public class PedometerActivity extends ReadingsActivity{
+@EActivity(R.layout.activity_pedometer)
+public class PedometerActivity extends Activity {
     static int rangeHigh,rangeLow;
 
     @Override
@@ -30,13 +34,16 @@ public class PedometerActivity extends ReadingsActivity{
 
     //reading the steps from hexiwear from readings activity
 
-    private void setPedometerVisibility(final Mode mode) {
-        final Map<String, Boolean> displayPreferences = hexiwearDevices.getDisplayPreferences(device.getAddress());
-        final Reading pedometer = readingSteps;
-        pedometer.setVisibility(displayPreferences.get(readingSteps.getReadingType().name()) && mode.hasCharacteristic(readingSteps.getReadingType()) ? View.VISIBLE : View.GONE);
+    @Click(R.id.updateRange)
+    protected void setPedometerVisibility(View view) {
+//        final Map<String, Boolean> displayPreferences = hexiwearDevices.getDisplayPreferences(device.getAddress());
+//        final Reading pedometer = readingSteps;
+//        pedometer.setVisibility(displayPreferences.get(readingSteps.getReadingType().name()) && mode.hasCharacteristic(readingSteps.getReadingType()) ? View.VISIBLE : View.GONE);
         //puts value in text_steps
         TextView textView = (TextView) findViewById(R.id.text_steps);
-        textView.setText("Total Steps: "+pedometer.toString());
+        textView.setText("Total Steps: "+ReadingsActivity.readingStepsValue);
+
+        updateRange(new View(this));
     }
 
     protected void reset(View view){
@@ -45,7 +52,7 @@ public class PedometerActivity extends ReadingsActivity{
     }
 
     public void returnToMain(View view) {
-        Intent intent = new Intent(this, ReadingsActivity.class);
+        Intent intent = new Intent(this, ReadingsActivity_.class);
         startActivity(intent);
     }
 

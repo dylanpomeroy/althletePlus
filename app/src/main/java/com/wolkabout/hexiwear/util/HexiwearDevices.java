@@ -24,6 +24,7 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.wolkabout.hexiwear.activity.ReadingsActivity;
 import com.wolkabout.hexiwear.model.Characteristic;
 import com.wolkabout.hexiwear.model.HexiwearDevice;
 import com.wolkabout.wolkrestandroid.Credentials_;
@@ -172,7 +173,10 @@ public class HexiwearDevices {
     }
 
     public boolean shouldTransmit(final BluetoothDevice device) {
-        return preferences.getBoolean(device.getAddress() + SHOULD_TRANSMIT_SUFFIX, false);
+        if (ReadingsActivity.skippingHexiConnection)
+            return true;
+        else
+            return preferences.getBoolean(device.getAddress() + SHOULD_TRANSMIT_SUFFIX, false);
     }
 
     public boolean shouldTransmit(final HexiwearDevice device) {

@@ -13,13 +13,6 @@
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
 
-        <Button
-            android:id="@+id/doTheThingButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="doTheThingButton" />
-
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
@@ -62,11 +55,17 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"/>
 
             <Button
-                android:id="@+id/pedometer"
+                android:id="@+id/btnPedometer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="switchToPedometer()"
                 android:text="Pedometer" />
+
+            <Button
+                android:id="@+id/btnAlertAlthlete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Alert Althlete" />
 
             <LinearLayout
                 android:id="@+id/readings"
