@@ -55,10 +55,9 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"/>
 
             <Button
-                android:id="@+id/pedometer"
+                android:id="@+id/btnPedometer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="switchToPedometer()"
                 android:text="Pedometer" />
 
             <Button

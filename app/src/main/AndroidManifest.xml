@@ -60,6 +60,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".activity.PedometerActivity_"
+            android:label="Pedometer"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".activity.SettingsActivity_"
             android:label="@string/preferences_activity_title"
             android:parentActivityName=".activity.ReadingsActivity_"

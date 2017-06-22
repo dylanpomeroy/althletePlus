@@ -105,6 +105,7 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
     @ViewById
     SingleReading readingLight;
 
+    public static String readingStepsValue = "Oh yay";
     @ViewById
     SingleReading readingSteps;
 
@@ -146,6 +147,12 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
     private boolean shouldUnpair;
 
     private int notificationCount = 0;
+
+    @Click(R.id.btnPedometer)
+    public void switchToPedometer(View view) {
+        Intent intent = new Intent(getBaseContext(), PedometerActivity_.class);
+        startActivity(intent);
+    }
 
     @Click(R.id.btnAlertAlthlete)
     public void alertAlthlete(){
@@ -206,11 +213,6 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
         setReadingVisibility(mode);
     }
 
-    public void switchToPedometer(View view) {
-        Intent intent = new Intent(this, PedometerActivity.class);
-        startActivity(intent);
-    }
-
     @Receiver(actions = BluetoothService.MODE_CHANGED, local = true)
     void onModeChanged(@Receiver.Extra final Mode mode) {
         this.mode = mode;
@@ -262,17 +264,18 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
 
     private void setReadingVisibility(final Mode mode) {
         Map<String, Boolean> displayPreferences = null;
-        if (!skippingHexiConnection)
-             displayPreferences = hexiwearDevices.getDisplayPreferences(device.getAddress());
-        for (int i = 0; i < readings.getChildCount(); i++) {
-            final Reading reading = (Reading) readings.getChildAt(i);
-            final Characteristic readingType = reading.getReadingType();
-            final boolean readingEnabled;
-            if (skippingHexiConnection)
-                readingEnabled = true;
-            else
-                readingEnabled = displayPreferences.get(readingType.name());
-            reading.setVisibility(readingEnabled && mode.hasCharacteristic(readingType) ? View.VISIBLE : View.GONE);
+        if (!skippingHexiConnection) {
+            displayPreferences = hexiwearDevices.getDisplayPreferences(device.getAddress());
+            for (int i = 0; i < readings.getChildCount(); i++) {
+                final Reading reading = (Reading) readings.getChildAt(i);
+                final Characteristic readingType = reading.getReadingType();
+                final boolean readingEnabled;
+                if (skippingHexiConnection)
+                    readingEnabled = true;
+                else
+                    readingEnabled = displayPreferences.get(readingType.name());
+                reading.setVisibility(readingEnabled && mode.hasCharacteristic(readingType) ? View.VISIBLE : View.GONE);
+            }
         }
     }
 
@@ -352,6 +355,7 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
                 break;
             case STEPS:
                 readingSteps.setValue(data);
+                readingStepsValue = data;
                 break;
             case CALORIES:
                 readingCalories.setValue(data);
