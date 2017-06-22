@@ -26,6 +26,7 @@ import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Color;
 import android.os.Handler;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -35,6 +36,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -145,8 +147,14 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
 
     private int notificationCount = 0;
 
-    @Click(R.id.doTheThingButton)
-    public void doTheThing(){
+    @Click(R.id.btnAlertAlthlete)
+    public void alertAlthlete(){
+        // modify button appearance
+        final Button button = (Button)findViewById(R.id.btnAlertAlthlete);
+        button.setBackgroundColor(Color.YELLOW);
+        button.setText("Alerting Althete...");
+        button.setEnabled(false);
+
         bluetoothService.queueNotification((byte) 2, notificationCount);
         final Handler handler = new Handler();
         for (int i = 0; i < 10; i++){
@@ -155,8 +163,19 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
                 public void run(){
                     bluetoothService.queueNotification((byte) 2, notificationCount);
                 }
-            }, 500);
+            }, i * 100);
         }
+
+        // set button appearance back to normal
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run(){
+                button.setBackgroundResource(android.R.drawable.btn_default);
+                button.setText("Alert Althlete");
+                button.setEnabled(true);
+            }
+        }, 2000);
+
         notificationCount++;
     }
 
