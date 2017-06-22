@@ -3,6 +3,7 @@ package com.wolkabout.hexiwear.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -34,8 +35,8 @@ public class PedometerActivity extends Activity {
 
     //reading the steps from hexiwear from readings activity
 
-    @Click(R.id.updateRange)
-    protected void setPedometerVisibility(View view) {
+    @AfterViews
+    protected void setPedometerVisibility() {
 //        final Map<String, Boolean> displayPreferences = hexiwearDevices.getDisplayPreferences(device.getAddress());
 //        final Reading pedometer = readingSteps;
 //        pedometer.setVisibility(displayPreferences.get(readingSteps.getReadingType().name()) && mode.hasCharacteristic(readingSteps.getReadingType()) ? View.VISIBLE : View.GONE);
@@ -43,14 +44,24 @@ public class PedometerActivity extends Activity {
         TextView textView = (TextView) findViewById(R.id.text_steps);
         textView.setText("Total Steps: "+ReadingsActivity.readingStepsValue);
 
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run(){
+                setPedometerVisibility();
+            }
+        }, 500);
+
         updateRange(new View(this));
     }
 
+    @Click(R.id.btnStepReset)
     protected void reset(View view){
         TextView textView = (TextView) findViewById(R.id.text_steps);
         textView.setText("Total Steps: 0");
     }
 
+    @Click(R.id.btnReturnToMain)
     public void returnToMain(View view) {
         Intent intent = new Intent(this, ReadingsActivity_.class);
         startActivity(intent);
