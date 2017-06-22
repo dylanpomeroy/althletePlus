@@ -109,6 +109,7 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
 
     @Click(R.id.btnSkipPairing)
     void skipPairing(){
+        ReadingsActivity.skippingHexiConnection = true;
         ReadingsActivity_.intent(MainActivity.this).start();
     }
 

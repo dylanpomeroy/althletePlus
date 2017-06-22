@@ -74,6 +74,8 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
 
     private static final String TAG = ReadingsActivity.class.getSimpleName();
 
+    public static boolean skippingHexiConnection = false;
+
     @Extra
     BluetoothDevice device;
 
@@ -160,7 +162,10 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
 
     @AfterInject
     void startService() {
-        hexiwearDevice = new HexiwearDevice(); //hexiwearDevices.getDevice(device.getAddress());
+        if (skippingHexiConnection)
+            hexiwearDevice = new HexiwearDevice();
+        else
+            hexiwearDevice = hexiwearDevices.getDevice(device.getAddress());
         if (hexiwearDevices.shouldKeepAlive(hexiwearDevice)) {
             BluetoothService_.intent(this).start();
         }
@@ -237,11 +242,17 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
     }
 
     private void setReadingVisibility(final Mode mode) {
-        // final Map<String, Boolean> displayPreferences = hexiwearDevices.getDisplayPreferences(device.getAddress());
+        Map<String, Boolean> displayPreferences = null;
+        if (!skippingHexiConnection)
+             displayPreferences = hexiwearDevices.getDisplayPreferences(device.getAddress());
         for (int i = 0; i < readings.getChildCount(); i++) {
             final Reading reading = (Reading) readings.getChildAt(i);
             final Characteristic readingType = reading.getReadingType();
-            final boolean readingEnabled = true; // displayPreferences.get(readingType.name());
+            final boolean readingEnabled;
+            if (skippingHexiConnection)
+                readingEnabled = true;
+            else
+                readingEnabled = displayPreferences.get(readingType.name());
             reading.setVisibility(readingEnabled && mode.hasCharacteristic(readingType) ? View.VISIBLE : View.GONE);
         }
     }
