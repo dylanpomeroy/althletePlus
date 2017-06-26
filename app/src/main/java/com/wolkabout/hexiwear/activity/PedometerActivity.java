@@ -42,7 +42,7 @@ public class PedometerActivity extends Activity {
 //        pedometer.setVisibility(displayPreferences.get(readingSteps.getReadingType().name()) && mode.hasCharacteristic(readingSteps.getReadingType()) ? View.VISIBLE : View.GONE);
         //puts value in text_steps
         TextView textView = (TextView) findViewById(R.id.text_steps);
-        textView.setText("Total Steps: "+ReadingsActivity.readingStepsValue);
+        textView.setText("Total Steps: "+getIntent().getSerializableExtra("PedometerDataAccess"));
 
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {

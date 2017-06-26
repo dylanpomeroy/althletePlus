@@ -151,6 +151,7 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
     @Click(R.id.btnPedometer)
     public void switchToPedometer(View view) {
         Intent intent = new Intent(getBaseContext(), PedometerActivity_.class);
+        intent.putExtra("PedometerDataAccess", readingStepsValue);
         startActivity(intent);
     }
 
