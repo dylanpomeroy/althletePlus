@@ -15,11 +15,19 @@ public class DataAccess implements IDataAccess {
 
     private Date lastSynced;
 
-    Map<ReadingType, DataAccessReading> allReadings;
+    private static Map<ReadingType, DataAccessReading> allReadings;
 
     public DataAccess(){
-        allReadings = new HashMap<>();
-        lastSynced = new Date(Long.MIN_VALUE);
+        if (allReadings == null) {
+            allReadings = new HashMap<>();
+            for (ReadingType type : ReadingType.values()) {
+                DataAccessReading dAR = new DataAccessReading();
+                dAR.addReading(new Reading(type, null, new Date()));
+
+                allReadings.put(type, dAR);
+            }
+            lastSynced = new Date(Long.MIN_VALUE);
+        }
     }
 
     public void syncWithFirebase(){

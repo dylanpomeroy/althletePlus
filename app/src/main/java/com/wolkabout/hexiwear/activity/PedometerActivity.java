@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import com.wolkabout.hexiwear.R;
+import com.wolkabout.hexiwear.dataAccess.DataAccess;
+import com.wolkabout.hexiwear.dataAccess.ReadingType;
 import com.wolkabout.hexiwear.model.Characteristic;
 import com.wolkabout.hexiwear.model.Mode;
 import com.wolkabout.hexiwear.view.Reading;
@@ -26,6 +28,7 @@ import java.util.Map;
 @EActivity(R.layout.activity_pedometer)
 public class PedometerActivity extends Activity {
     static int rangeHigh,rangeLow;
+    private DataAccess dataAccess = new DataAccess();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,12 +40,8 @@ public class PedometerActivity extends Activity {
 
     @AfterViews
     protected void setPedometerVisibility() {
-//        final Map<String, Boolean> displayPreferences = hexiwearDevices.getDisplayPreferences(device.getAddress());
-//        final Reading pedometer = readingSteps;
-//        pedometer.setVisibility(displayPreferences.get(readingSteps.getReadingType().name()) && mode.hasCharacteristic(readingSteps.getReadingType()) ? View.VISIBLE : View.GONE);
-        //puts value in text_steps
         TextView textView = (TextView) findViewById(R.id.text_steps);
-        textView.setText("Total Steps: "+getIntent().getSerializableExtra("PedometerDataAccess"));
+        textView.setText("Total Steps: "+dataAccess.getCurrentReading(ReadingType.Steps).value);
 
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
