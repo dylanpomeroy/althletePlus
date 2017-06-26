@@ -43,6 +43,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.wolkabout.hexiwear.R;
+import com.wolkabout.hexiwear.dataAccess.DataAccess;
+import com.wolkabout.hexiwear.dataAccess.IDataAccess;
+import com.wolkabout.hexiwear.dataAccess.Reading;
 import com.wolkabout.hexiwear.model.Characteristic;
 import com.wolkabout.hexiwear.model.HexiwearDevice;
 import com.wolkabout.hexiwear.model.Mode;
@@ -50,7 +53,6 @@ import com.wolkabout.hexiwear.service.BluetoothService;
 import com.wolkabout.hexiwear.service.BluetoothService_;
 import com.wolkabout.hexiwear.util.Dialog;
 import com.wolkabout.hexiwear.util.HexiwearDevices;
-import com.wolkabout.hexiwear.view.Reading;
 import com.wolkabout.hexiwear.view.SingleReading;
 import com.wolkabout.hexiwear.view.TripleReading;
 import com.wolkabout.wolkrestandroid.Credentials_;
@@ -68,7 +70,9 @@ import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Date;
 import java.util.Map;
+import com.wolkabout.hexiwear.dataAccess.*;
 
 @EActivity(R.layout.activity_readings)
 @OptionsMenu(R.menu.menu_readings)
@@ -105,7 +109,6 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
     @ViewById
     SingleReading readingLight;
 
-    public static String readingStepsValue = "Oh yay";
     @ViewById
     SingleReading readingSteps;
 
@@ -151,7 +154,7 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
     @Click(R.id.btnPedometer)
     public void switchToPedometer(View view) {
         Intent intent = new Intent(getBaseContext(), PedometerActivity_.class);
-        intent.putExtra("PedometerDataAccess", readingStepsValue);
+        intent.putExtra("PedometerDataAccess", );
         startActivity(intent);
     }
 
@@ -268,7 +271,7 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
         if (!skippingHexiConnection) {
             displayPreferences = hexiwearDevices.getDisplayPreferences(device.getAddress());
             for (int i = 0; i < readings.getChildCount(); i++) {
-                final Reading reading = (Reading) readings.getChildAt(i);
+                final com.wolkabout.hexiwear.view.Reading reading = (com.wolkabout.hexiwear.view.Reading) readings.getChildAt(i);
                 final Characteristic readingType = reading.getReadingType();
                 final boolean readingEnabled;
                 if (skippingHexiConnection)
@@ -338,42 +341,52 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
         switch (characteristic) {
             case BATTERY:
                 readingBattery.setValue(data);
+                dataAccess.addReading(new Reading(ReadingType.Battery, data, new Date()));
                 break;
             case TEMPERATURE:
                 readingTemperature.setValue(data);
+                dataAccess.addReading(new Reading(ReadingType.Temperature, data, new Date()));
                 break;
             case HUMIDITY:
                 readingHumidity.setValue(data);
+                dataAccess.addReading(new Reading(ReadingType.Humidity, data, new Date()));
                 break;
             case PRESSURE:
                 readingPressure.setValue(data);
+                dataAccess.addReading(new Reading(ReadingType.Pressure, data, new Date()));
                 break;
             case HEARTRATE:
                 readingHeartRate.setValue(data);
+                dataAccess.addReading(new Reading(ReadingType.HeartRate, data, new Date()));
                 break;
             case LIGHT:
                 readingLight.setValue(data);
+                dataAccess.addReading(new Reading(ReadingType.Light, data, new Date()));
                 break;
             case STEPS:
                 readingSteps.setValue(data);
-                readingStepsValue = data;
+                dataAccess.addReading(new Reading(ReadingType.Steps, data, new Date()));
                 break;
             case CALORIES:
                 readingCalories.setValue(data);
+                dataAccess.addReading(new Reading(ReadingType.Calories, data, new Date()));
                 break;
             case ACCELERATION:
+                dataAccess.addReading(new Reading(ReadingType.Acceleration, data, new Date()));
                 final String[] accelerationReadings = data.split(";");
                 readingAcceleration.setFirstValue(accelerationReadings[0]);
                 readingAcceleration.setSecondValue(accelerationReadings[1]);
                 readingAcceleration.setThirdValue(accelerationReadings[2]);
                 break;
             case MAGNET:
+                dataAccess.addReading(new Reading(ReadingType.Magnet, data, new Date()));
                 final String[] magnetReadings = data.split(";");
                 readingMagnet.setFirstValue(magnetReadings[0]);
                 readingMagnet.setSecondValue(magnetReadings[1]);
                 readingMagnet.setThirdValue(magnetReadings[2]);
                 break;
             case GYRO:
+                dataAccess.addReading(new Reading(ReadingType.Gyro, data, new Date()));
                 final String[] gyroscopeReadings = data.split(";");
                 readingGyro.setFirstValue(gyroscopeReadings[0]);
                 readingGyro.setSecondValue(gyroscopeReadings[1]);
