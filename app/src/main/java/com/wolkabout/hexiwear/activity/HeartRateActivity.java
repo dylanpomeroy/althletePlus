@@ -43,7 +43,7 @@ public class HeartRateActivity extends Activity {
 
     @AfterViews
     protected void setHeartRateVisibility() {
-        int heartRate = Integer.parseInt(dataAccess.getCurrentReading(ReadingType.HeartRate).value);
+        int heartRate = Integer.parseInt(dataAccess.getCurrentReading(ReadingType.HeartRate).value.split(" ")[0]);
 
         TextView textView = (TextView) findViewById(R.id.text_heartRate);
         textView.setText("Heartrate: "+ heartRate);

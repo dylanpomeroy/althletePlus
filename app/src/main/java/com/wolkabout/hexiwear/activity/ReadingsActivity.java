@@ -142,7 +142,8 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
     private static int vibrateDurationDefault = 1000;
     public static boolean shouldVibrate = false;
     public static int vibrateDuration = vibrateDurationDefault;
-    private void checkForRequests(){
+    @AfterViews
+    public void checkForRequests(){
         if (shouldVibrate){
             shouldVibrate = false;
             vibrateWatch(vibrateDuration);
