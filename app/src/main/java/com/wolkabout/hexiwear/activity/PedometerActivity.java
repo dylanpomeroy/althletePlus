@@ -58,7 +58,7 @@ public class PedometerActivity extends Activity {
         updateRange(new View(this));
 
         // vibrate if not in range
-        if (sessionSteps > rangeHigh || sessionSteps < rangeLow){
+        if (sessionSteps > rangeHigh ){
             ReadingsActivity.vibrateDuration = 500;
             ReadingsActivity.shouldVibrate = true;
         }
@@ -86,15 +86,17 @@ public class PedometerActivity extends Activity {
         String highString = textHigh.getText().toString();
 
         //read text from low_input and convert to string
-        EditText textLow = (EditText) findViewById(R.id.low_input);
-        String lowString = textLow.getText().toString();
+        //EditText textLow = (EditText) findViewById(R.id.low_input);
+        //String lowString = textLow.getText().toString();
 
         //if the string is not empty, set the static range variable to the parsed int
         //only numbers are able to be entered becasue the input type is number
         if(!highString.equals("")) rangeHigh=Integer.parseInt(highString);
         else rangeHigh=0;
-        if(!lowString.equals("")) rangeLow=Integer.parseInt(lowString);
-        else rangeLow=0;
+
+        //commenting out low end since that is not helpful for the client with pedometer
+       // if(!lowString.equals("")) rangeLow=Integer.parseInt(lowString);
+        //else rangeLow=0;
 
         //take text and enter in database
         //enter variables rangeHigh and rangeLow into database
