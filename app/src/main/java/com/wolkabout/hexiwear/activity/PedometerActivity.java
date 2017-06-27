@@ -41,7 +41,7 @@ public class PedometerActivity extends Activity {
 
     @AfterViews
     protected void setPedometerVisibility() {
-        int totalSteps = Integer.parseInt(dataAccess.getCurrentReading(ReadingType.Steps).value);
+        int totalSteps = Integer.parseInt(dataAccess.getCurrentReading(ReadingType.Steps).value.trim());
         int sessionSteps = totalSteps - preSessionSteps;
 
         TextView textView = (TextView) findViewById(R.id.text_steps);
@@ -66,7 +66,7 @@ public class PedometerActivity extends Activity {
 
     @Click(R.id.btnStepReset)
     protected void reset(View view){
-        int totalSteps = Integer.parseInt(dataAccess.getCurrentReading(ReadingType.Steps).value);
+        int totalSteps = Integer.parseInt(dataAccess.getCurrentReading(ReadingType.Steps).value.trim());
         preSessionSteps = totalSteps;
 
         TextView textView = (TextView) findViewById(R.id.text_steps);
