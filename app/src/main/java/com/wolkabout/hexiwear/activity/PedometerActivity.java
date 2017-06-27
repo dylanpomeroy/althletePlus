@@ -40,8 +40,10 @@ public class PedometerActivity extends Activity {
 
     @AfterViews
     protected void setPedometerVisibility() {
+        String currentSteps = dataAccess.getCurrentReading(ReadingType.Steps).value;
+
         TextView textView = (TextView) findViewById(R.id.text_steps);
-        textView.setText("Total Steps: "+dataAccess.getCurrentReading(ReadingType.Steps).value);
+        textView.setText("Total Steps: "+currentSteps);
 
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -52,6 +54,11 @@ public class PedometerActivity extends Activity {
         }, 500);
 
         updateRange(new View(this));
+
+        // vibrate if not in range
+        int currentStepsInt = Integer.parseInt(currentSteps);
+        if (currentStepsInt > rangeHigh || currentStepsInt < rangeLow)
+            ReadingsActivity
     }
 
     @Click(R.id.btnStepReset)

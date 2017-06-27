@@ -1,12 +1,8 @@
 package com.wolkabout.hexiwear.dataAccess;
 
-import android.os.Build;
-import android.support.annotation.RequiresApi;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by dylanpomeroy on 6/25/17.

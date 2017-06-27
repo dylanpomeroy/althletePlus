@@ -126,24 +126,53 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
 
     @Click(R.id.btnAlertAlthlete)
     public void alertAlthlete(){
+        alertAlthlete(1000);
+    }
+
+
+    private static int vibrateDurationDefault = 1000;
+    public static boolean shouldVibrate = false;
+    public static int vibrateDuration = vibrateDurationDefault;
+    private void checkForRequests(){
+        if (shouldVibrate){
+            shouldVibrate = false;
+            vibrateWatch(vibrateDuration);
+            vibrateDuration = vibrateDurationDefault;
+        }
+
+        // re-call this method in 200ms
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run(){
+                checkForRequests();
+            }
+        }, 200);
+    }
+
+    private void vibrateWatch(int milliseconds){
+        bluetoothService.queueNotification((byte) 2, notificationCount);
+        final Handler handler = new Handler();
+        for (int i = 0; i < milliseconds / 100; i++){
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run(){
+                    bluetoothService.queueNotification((byte) 2, notificationCount);
+                }
+            }, i * milliseconds / 10);
+        }
+    }
+
+    public void alertAlthlete(int milliseconds){
         // modify button appearance
         final Button button = (Button)findViewById(R.id.btnAlertAlthlete);
         button.setBackgroundColor(Color.YELLOW);
         button.setText("Alerting Althete...");
         button.setEnabled(false);
 
-        bluetoothService.queueNotification((byte) 2, notificationCount);
-        final Handler handler = new Handler();
-        for (int i = 0; i < 10; i++){
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run(){
-                    bluetoothService.queueNotification((byte) 2, notificationCount);
-                }
-            }, i * 100);
-        }
+        vibrateWatch(milliseconds);
 
         // set button appearance back to normal
+        final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run(){
