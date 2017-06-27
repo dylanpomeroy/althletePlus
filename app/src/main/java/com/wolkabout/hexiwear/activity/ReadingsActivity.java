@@ -43,6 +43,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.wolkabout.hexiwear.R;
+import com.wolkabout.hexiwear.dataAccess.DataAccess;
+import com.wolkabout.hexiwear.dataAccess.IDataAccess;
+import com.wolkabout.hexiwear.dataAccess.Reading;
 import com.wolkabout.hexiwear.model.Characteristic;
 import com.wolkabout.hexiwear.model.HexiwearDevice;
 import com.wolkabout.hexiwear.model.Mode;
@@ -50,7 +53,6 @@ import com.wolkabout.hexiwear.service.BluetoothService;
 import com.wolkabout.hexiwear.service.BluetoothService_;
 import com.wolkabout.hexiwear.util.Dialog;
 import com.wolkabout.hexiwear.util.HexiwearDevices;
-import com.wolkabout.hexiwear.view.Reading;
 import com.wolkabout.hexiwear.view.SingleReading;
 import com.wolkabout.hexiwear.view.TripleReading;
 import com.wolkabout.wolkrestandroid.Credentials_;
@@ -68,7 +70,9 @@ import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Date;
 import java.util.Map;
+import com.wolkabout.hexiwear.dataAccess.*;
 
 @EActivity(R.layout.activity_readings)
 @OptionsMenu(R.menu.menu_readings)
@@ -77,6 +81,8 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
     private static final String TAG = ReadingsActivity.class.getSimpleName();
 
     public static boolean skippingHexiConnection = false;
+
+    private DataAccess dataAccess = new DataAccess();
 
     @Extra
     BluetoothDevice device;
@@ -88,48 +94,10 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
     Toolbar toolbar;
 
     @ViewById
-    SingleReading readingBattery;
-
-    @ViewById
-    SingleReading readingTemperature;
-
-    @ViewById
-    SingleReading readingHumidity;
-
-    @ViewById
-    SingleReading readingPressure;
-
-    public static String readingHeartRateValue = "Oh No";
-    @ViewById
-    SingleReading readingHeartRate;
-
-    @ViewById
-    SingleReading readingLight;
-
-    public static String readingStepsValue = "Oh yay";
-    @ViewById
-    SingleReading readingSteps;
-
-    @ViewById
-    SingleReading readingCalories;
-
-    @ViewById
-    TripleReading readingAcceleration;
-
-    @ViewById
-    TripleReading readingMagnet;
-
-    @ViewById
-    TripleReading readingGyro;
-
-    @ViewById
     TextView connectionStatus;
 
     @ViewById
     ProgressBar progressBar;
-
-    @ViewById
-    LinearLayout readings;
 
     @Bean
     HexiwearDevices hexiwearDevices;
@@ -151,36 +119,69 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
 
     @Click(R.id.btnPedometer)
     public void switchToPedometer(View view) {
+        dataAccess.addReading(new Reading(ReadingType.Steps, "0", new Date()));
         Intent intent = new Intent(getBaseContext(), PedometerActivity_.class);
         startActivity(intent);
     }
 
     @Click(R.id.btnHeartRate)
     public void switchToHeartRate(View view) {
+        dataAccess.addReading(new Reading(ReadingType.HeartRate, "0", new Date()));
         Intent intent = new Intent(getBaseContext(), HeartRateActivity_.class);
         startActivity(intent);
     }
 
     @Click(R.id.btnAlertAlthlete)
     public void alertAlthlete(){
+        alertAlthlete(1000);
+    }
+
+    // To vibrate watch:
+    //  set shouldVibrate to true
+    //  optionally set vibrateDuration value in milliseconds
+    private static int vibrateDurationDefault = 1000;
+    public static boolean shouldVibrate = false;
+    public static int vibrateDuration = vibrateDurationDefault;
+    private void checkForRequests(){
+        if (shouldVibrate){
+            shouldVibrate = false;
+            vibrateWatch(vibrateDuration);
+            vibrateDuration = vibrateDurationDefault;
+        }
+
+        // re-call this method in 200ms
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run(){
+                checkForRequests();
+            }
+        }, 200);
+    }
+
+    private void vibrateWatch(int milliseconds){
+        bluetoothService.queueNotification((byte) 2, notificationCount);
+        final Handler handler = new Handler();
+        for (int i = 0; i < milliseconds / 100; i++){
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run(){
+                    bluetoothService.queueNotification((byte) 2, notificationCount);
+                }
+            }, i * milliseconds / 10);
+        }
+    }
+
+    public void alertAlthlete(int milliseconds){
         // modify button appearance
         final Button button = (Button)findViewById(R.id.btnAlertAlthlete);
         button.setBackgroundColor(Color.YELLOW);
         button.setText("Alerting Althete...");
         button.setEnabled(false);
 
-        bluetoothService.queueNotification((byte) 2, notificationCount);
-        final Handler handler = new Handler();
-        for (int i = 0; i < 10; i++){
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run(){
-                    bluetoothService.queueNotification((byte) 2, notificationCount);
-                }
-            }, i * 100);
-        }
+        vibrateWatch(milliseconds);
 
         // set button appearance back to normal
+        final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run(){
@@ -217,7 +218,6 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
         super.onResume();
         shouldUnpair = false;
         invalidateOptionsMenu();
-        setReadingVisibility(mode);
     }
 
     @Receiver(actions = BluetoothService.MODE_CHANGED, local = true)
@@ -228,8 +228,6 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
         if (mode == Mode.IDLE) {
             dialog.showInfo(R.string.readings_idle_mode, false);
         }
-
-        setReadingVisibility(mode);
     }
 
     @Receiver(actions = BluetoothService.BLUETOOTH_SERVICE_STOPPED, local = true)
@@ -267,23 +265,6 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
         }
 
         progressBar.setVisibility(View.INVISIBLE);
-    }
-
-    private void setReadingVisibility(final Mode mode) {
-        Map<String, Boolean> displayPreferences = null;
-        if (!skippingHexiConnection) {
-            displayPreferences = hexiwearDevices.getDisplayPreferences(device.getAddress());
-            for (int i = 0; i < readings.getChildCount(); i++) {
-                final Reading reading = (Reading) readings.getChildAt(i);
-                final Characteristic readingType = reading.getReadingType();
-                final boolean readingEnabled;
-                if (skippingHexiConnection)
-                    readingEnabled = true;
-                else
-                    readingEnabled = displayPreferences.get(readingType.name());
-                reading.setVisibility(readingEnabled && mode.hasCharacteristic(readingType) ? View.VISIBLE : View.GONE);
-            }
-        }
     }
 
     @Override
@@ -343,48 +324,37 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
 
         switch (characteristic) {
             case BATTERY:
-                readingBattery.setValue(data);
+                dataAccess.addReading(new Reading(ReadingType.Battery, data, new Date()));
                 break;
             case TEMPERATURE:
-                readingTemperature.setValue(data);
+                dataAccess.addReading(new Reading(ReadingType.Temperature, data, new Date()));
                 break;
             case HUMIDITY:
-                readingHumidity.setValue(data);
+                dataAccess.addReading(new Reading(ReadingType.Humidity, data, new Date()));
                 break;
             case PRESSURE:
-                readingPressure.setValue(data);
+                dataAccess.addReading(new Reading(ReadingType.Pressure, data, new Date()));
                 break;
             case HEARTRATE:
-                readingHeartRate.setValue(data);
-                readingHeartRateValue = data;
+                dataAccess.addReading(new Reading(ReadingType.HeartRate, data, new Date()));
                 break;
             case LIGHT:
-                readingLight.setValue(data);
+                dataAccess.addReading(new Reading(ReadingType.Light, data, new Date()));
                 break;
             case STEPS:
-                readingSteps.setValue(data);
-                readingStepsValue = data;
+                dataAccess.addReading(new Reading(ReadingType.Steps, data, new Date()));
                 break;
             case CALORIES:
-                readingCalories.setValue(data);
+                dataAccess.addReading(new Reading(ReadingType.Calories, data, new Date()));
                 break;
             case ACCELERATION:
-                final String[] accelerationReadings = data.split(";");
-                readingAcceleration.setFirstValue(accelerationReadings[0]);
-                readingAcceleration.setSecondValue(accelerationReadings[1]);
-                readingAcceleration.setThirdValue(accelerationReadings[2]);
+                dataAccess.addReading(new Reading(ReadingType.Acceleration, data, new Date()));
                 break;
             case MAGNET:
-                final String[] magnetReadings = data.split(";");
-                readingMagnet.setFirstValue(magnetReadings[0]);
-                readingMagnet.setSecondValue(magnetReadings[1]);
-                readingMagnet.setThirdValue(magnetReadings[2]);
+                dataAccess.addReading(new Reading(ReadingType.Magnet, data, new Date()));
                 break;
             case GYRO:
-                final String[] gyroscopeReadings = data.split(";");
-                readingGyro.setFirstValue(gyroscopeReadings[0]);
-                readingGyro.setSecondValue(gyroscopeReadings[1]);
-                readingGyro.setThirdValue(gyroscopeReadings[2]);
+                dataAccess.addReading(new Reading(ReadingType.Gyro, data, new Date()));
                 break;
             default:
                 break;

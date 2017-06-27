@@ -3,10 +3,13 @@ package com.wolkabout.hexiwear.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import com.wolkabout.hexiwear.R;
+import com.wolkabout.hexiwear.dataAccess.DataAccess;
+import com.wolkabout.hexiwear.dataAccess.ReadingType;
 import com.wolkabout.hexiwear.model.Characteristic;
 import com.wolkabout.hexiwear.model.Mode;
 import com.wolkabout.hexiwear.view.Reading;
@@ -24,7 +27,9 @@ import java.util.Map;
  */
 @EActivity(R.layout.activity_pedometer)
 public class PedometerActivity extends Activity {
-    static int rangeHigh,rangeLow;
+    private static int rangeHigh,rangeLow;
+    private static int preSessionSteps = 0;
+    private DataAccess dataAccess = new DataAccess();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,23 +39,41 @@ public class PedometerActivity extends Activity {
 
     //reading the steps from hexiwear from readings activity
 
-    @Click(R.id.updateRange)
-    protected void setPedometerVisibility(View view) {
-//        final Map<String, Boolean> displayPreferences = hexiwearDevices.getDisplayPreferences(device.getAddress());
-//        final Reading pedometer = readingSteps;
-//        pedometer.setVisibility(displayPreferences.get(readingSteps.getReadingType().name()) && mode.hasCharacteristic(readingSteps.getReadingType()) ? View.VISIBLE : View.GONE);
-        //puts value in text_steps
+    @AfterViews
+    protected void setPedometerVisibility() {
+        int totalSteps = Integer.parseInt(dataAccess.getCurrentReading(ReadingType.Steps).value);
+        int sessionSteps = totalSteps - preSessionSteps;
+
         TextView textView = (TextView) findViewById(R.id.text_steps);
-        textView.setText("Total Steps: "+ReadingsActivity.readingStepsValue);
+        textView.setText("Total Steps: "+sessionSteps);
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run(){
+                setPedometerVisibility();
+            }
+        }, 500);
 
         updateRange(new View(this));
+
+        // vibrate if not in range
+        if (sessionSteps > rangeHigh || sessionSteps < rangeLow){
+            ReadingsActivity.vibrateDuration = 500;
+            ReadingsActivity.shouldVibrate = true;
+        }
     }
 
+    @Click(R.id.btnStepReset)
     protected void reset(View view){
+        int totalSteps = Integer.parseInt(dataAccess.getCurrentReading(ReadingType.Steps).value);
+        preSessionSteps = totalSteps;
+
         TextView textView = (TextView) findViewById(R.id.text_steps);
         textView.setText("Total Steps: 0");
     }
 
+    @Click(R.id.btnReturnToMain)
     public void returnToMain(View view) {
         Intent intent = new Intent(this, ReadingsActivity_.class);
         startActivity(intent);

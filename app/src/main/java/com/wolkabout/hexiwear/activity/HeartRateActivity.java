@@ -9,6 +9,8 @@ import android.widget.TextView;
 import com.wolkabout.hexiwear.R;
 import com.wolkabout.hexiwear.activity.ReadingsActivity;
 import com.wolkabout.hexiwear.activity.ReadingsActivity_;
+import com.wolkabout.hexiwear.dataAccess.DataAccess;
+import com.wolkabout.hexiwear.dataAccess.ReadingType;
 import com.wolkabout.hexiwear.model.Characteristic;
 import com.wolkabout.hexiwear.model.Mode;
 import com.wolkabout.hexiwear.view.Reading;
@@ -27,6 +29,8 @@ import java.util.Map;
 @EActivity(R.layout.activity_heartrate)
 public class HeartRateActivity extends Activity {
     static int rangeHigh,rangeLow;
+    private DataAccess dataAccess = new DataAccess();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,14 +42,18 @@ public class HeartRateActivity extends Activity {
 
     @AfterViews
     protected void setHeartRateVisibility() {
-//        final Map<String, Boolean> displayPreferences = hexiwearDevices.getDisplayPreferences(device.getAddress());
-//        final Reading pedometer = readingSteps;
-//        pedometer.setVisibility(displayPreferences.get(readingSteps.getReadingType().name()) && mode.hasCharacteristic(readingSteps.getReadingType()) ? View.VISIBLE : View.GONE);
-        //puts value in text_steps
+        int heartRate = Integer.parseInt(dataAccess.getCurrentReading(ReadingType.HeartRate).value);
+
         TextView textView = (TextView) findViewById(R.id.text_heartRate);
-        textView.setText("Heartrate: "+ ReadingsActivity.readingHeartRateValue);
+        textView.setText("Heartrate: "+ heartRate);
 
         updateRange(new View(this));
+
+        // vibrate if not in range
+        if (heartRate > rangeHigh || heartRate < rangeLow){
+            ReadingsActivity.vibrateDuration = 500;
+            ReadingsActivity.shouldVibrate = true;
+        }
     }
 
     @Click(R.id.returnToMain)

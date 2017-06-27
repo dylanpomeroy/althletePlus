@@ -128,7 +128,7 @@
                     />
 
                 <Button
-                    android:id="@+id/stepReset"
+                    android:id="@+id/btnStepReset"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
@@ -139,11 +139,10 @@
                     />
 
                 <Button
-                    android:id="@+id/returnToMain"
+                    android:id="@+id/btnReturnToMain"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    android:onClick="returnToMain"
                     android:text="Return to Main"
                     />
 
