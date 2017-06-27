@@ -124,12 +124,21 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
         startActivity(intent);
     }
 
+    @Click(R.id.btnHeartRate)
+    public void switchToHeartRate(View view) {
+        dataAccess.addReading(new Reading(ReadingType.HeartRate, "0", new Date()));
+        Intent intent = new Intent(getBaseContext(), HeartRateActivity_.class);
+        startActivity(intent);
+    }
+
     @Click(R.id.btnAlertAlthlete)
     public void alertAlthlete(){
         alertAlthlete(1000);
     }
 
-
+    // To vibrate watch:
+    //  set shouldVibrate to true
+    //  optionally set vibrateDuration value in milliseconds
     private static int vibrateDurationDefault = 1000;
     public static boolean shouldVibrate = false;
     public static int vibrateDuration = vibrateDurationDefault;
