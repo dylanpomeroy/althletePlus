@@ -3,6 +3,7 @@ package com.wolkabout.hexiwear.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -46,6 +47,14 @@ public class HeartRateActivity extends Activity {
 
         TextView textView = (TextView) findViewById(R.id.text_heartRate);
         textView.setText("Heartrate: "+ heartRate);
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run(){
+                setHeartRateVisibility();
+            }
+        }, 500);
 
         updateRange(new View(this));
 
