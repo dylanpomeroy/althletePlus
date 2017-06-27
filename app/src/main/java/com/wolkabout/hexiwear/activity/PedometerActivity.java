@@ -27,7 +27,8 @@ import java.util.Map;
  */
 @EActivity(R.layout.activity_pedometer)
 public class PedometerActivity extends Activity {
-    static int rangeHigh,rangeLow;
+    private static int rangeHigh,rangeLow;
+    private static int preSessionSteps = 0;
     private DataAccess dataAccess = new DataAccess();
 
     @Override
@@ -40,10 +41,11 @@ public class PedometerActivity extends Activity {
 
     @AfterViews
     protected void setPedometerVisibility() {
-        String currentSteps = dataAccess.getCurrentReading(ReadingType.Steps).value;
+        int totalSteps = Integer.parseInt(dataAccess.getCurrentReading(ReadingType.Steps).value);
+        int sessionSteps = totalSteps - preSessionSteps;
 
         TextView textView = (TextView) findViewById(R.id.text_steps);
-        textView.setText("Total Steps: "+currentSteps);
+        textView.setText("Total Steps: "+sessionSteps);
 
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -56,13 +58,17 @@ public class PedometerActivity extends Activity {
         updateRange(new View(this));
 
         // vibrate if not in range
-        int currentStepsInt = Integer.parseInt(currentSteps);
-        if (currentStepsInt > rangeHigh || currentStepsInt < rangeLow)
-            ReadingsActivity
+        if (sessionSteps > rangeHigh || sessionSteps < rangeLow){
+            ReadingsActivity.vibrateDuration = 500;
+            ReadingsActivity.shouldVibrate = true;
+        }
     }
 
     @Click(R.id.btnStepReset)
     protected void reset(View view){
+        int totalSteps = Integer.parseInt(dataAccess.getCurrentReading(ReadingType.Steps).value);
+        preSessionSteps = totalSteps;
+
         TextView textView = (TextView) findViewById(R.id.text_steps);
         textView.setText("Total Steps: 0");
     }

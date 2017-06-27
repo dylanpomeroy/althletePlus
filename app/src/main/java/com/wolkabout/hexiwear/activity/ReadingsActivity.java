@@ -119,7 +119,7 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
 
     @Click(R.id.btnPedometer)
     public void switchToPedometer(View view) {
-        dataAccess.addReading(new Reading(ReadingType.Steps, "yoyo", new Date()));
+        dataAccess.addReading(new Reading(ReadingType.Steps, "0", new Date()));
         Intent intent = new Intent(getBaseContext(), PedometerActivity_.class);
         startActivity(intent);
     }
