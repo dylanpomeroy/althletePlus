@@ -62,7 +62,17 @@ public class HeartRateActivity extends Activity {
         if (heartRate > rangeHigh || heartRate < rangeLow){
             ReadingsActivity.vibrateDuration = 500;
             ReadingsActivity.shouldVibrate = true;
+            ReadingsActivity.shouldNotify = true;
+            if (heartRate > rangeHigh)
+            {
+                ReadingsActivity.notifyText = "Heart rate exceeding range!";
+            }
+            else if (heartRate < rangeLow)
+            {
+                ReadingsActivity.notifyText = "Heart rate is too low, get out dem whips";
+            }
         }
+
     }
 
     @Click(R.id.returnToMain)
