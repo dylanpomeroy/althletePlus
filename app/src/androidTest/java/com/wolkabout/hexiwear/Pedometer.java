@@ -28,7 +28,7 @@ public class Pedometer {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.wolkabout.hexiwear.activity", appContext.getPackageName());
+        assertEquals("com.wolkabout.hexiwear", appContext.getPackageName());
     }
 
     @Test
