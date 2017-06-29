@@ -93,15 +93,17 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-databind:2.7.5'
 
     debugCompile 'com.google.firebase:firebase-crash:10.0.1'
-    androidTestCompile 'junit:junit:4.12'
-
-    androidTestCompile'com.android.support.test.espresso:espresso-core:2.2.2'
+    //testing dependency
+    //androidTestCompile 'junit:junit:4.12'
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
 }
 
-apt {
+/*apt {
     arguments {
         androidManifestFile variant.outputs[0].processResources.manifestFile
     }
-}
+}*/
