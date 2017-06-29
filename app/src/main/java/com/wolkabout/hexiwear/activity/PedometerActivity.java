@@ -61,6 +61,15 @@ public class PedometerActivity extends Activity {
         if (sessionSteps > rangeHigh || sessionSteps < rangeLow){
             ReadingsActivity.vibrateDuration = 500;
             ReadingsActivity.shouldVibrate = true;
+            ReadingsActivity.shouldNotify = true;
+            if (sessionSteps > rangeHigh)
+            {
+                ReadingsActivity.notifyText = "He's hustling hard!";
+            }
+            else if (sessionSteps < rangeLow)
+            {
+                ReadingsActivity.notifyText = "Grab some whips he's slacking";
+            }
         }
     }
 
