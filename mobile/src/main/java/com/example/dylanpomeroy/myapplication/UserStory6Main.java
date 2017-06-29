@@ -11,22 +11,17 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.series.DataPoint;
-import com.jjoe64.graphview.series.*;
+
+import java.util.ArrayList;
 
 public class UserStory6Main extends AppCompatActivity {
 
-    private TextView msgTxt;
-    private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-    private DatabaseReference mRootReference = firebaseDatabase.getReference();
-    private DatabaseReference mChildReference = mRootReference.child("message");
+    private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference myRef;
     private AppData app;
-    public FireApp fire;
-    double number1 = 1, number2= 3, number3=5, number4= 20;
+    String number1 = "4", number2= "6";
     Button click, click2;
     TextView pullData;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,17 +33,17 @@ public class UserStory6Main extends AppCompatActivity {
         click = (Button)findViewById(R.id.lolbutton);
         click2 = (Button)findViewById(R.id.push_button);
 
+
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        myRef = mFirebaseDatabase.getReference();
+
         click.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 submitInfoButton(v);
             }
 
-            GraphView graph = (GraphView) findViewById(R.id.graph);
-            LineGraphSeries<DataPoint> series = new LineGraphSeries<>(new DataPoint[] {
-                    new DataPoint(number1, number2),
-                    new DataPoint(number3, number4),
-            });
+
 
 //            graph.addSeries(series);
         });
@@ -56,12 +51,12 @@ public class UserStory6Main extends AppCompatActivity {
         click2.setOnClickListener(new View.OnClickListener() { //under test at the moment
             @Override
             public void onClick(View v) {
-                mRootReference.child("Name").child("-KmgV7tP4NKoK_dmsOlN").addValueEventListener(new ValueEventListener() {
+
+                myRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
 
-                        FireApp data = dataSnapshot.getValue(FireApp.class);
-                        pullData.setText(dataSnapshot.getValue().toString());
+                        showData(dataSnapshot);
                     }
 
                     @Override
@@ -73,19 +68,37 @@ public class UserStory6Main extends AppCompatActivity {
 
         });
 
+    }
+
+
+    private void showData(DataSnapshot dataSnapshot) {
+
+        for(DataSnapshot ds : dataSnapshot.getChildren()){ //gets data from firebase
+            FireApp uInfo = new FireApp();
+            uInfo.setNumber1(ds.child("-KnoWzTc7s9vs5nzCqLm").getValue(FireApp.class).getNumber1());
+            uInfo.setNumber2(ds.child("-KnoWzTc7s9vs5nzCqLm").getValue(FireApp.class).getNumber2());
+            String data1 = String.valueOf(uInfo.getNumber1());
+            String data2 = String.valueOf(uInfo.getNumber2());
+
+            ArrayList<String> array  = new ArrayList<>();
+            array.add(data1);
+            array.add(data2);
+
+            pullData.setText(array.toString());
+
         }
+    }
+
 
     public void submitInfoButton(View v) {
         //set up firebase
         app.fireBaseDBInstance = FirebaseDatabase.getInstance();
         app.fireBaseReference = app.fireBaseDBInstance.getReference("Name");
 
-        String dataID = app.fireBaseReference.push().getKey();
-        FireApp data = new FireApp(dataID, number1, number2, number3, number4);
+        String dataID = app.fireBaseReference.push().getKey(); //pushing data to firebase
+        FireApp data = new FireApp(number1, number2);
 
         app.fireBaseReference.child(dataID).setValue(data);
-        finish();
     }
 
 }
-

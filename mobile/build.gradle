@@ -24,8 +24,6 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    wearApp project(':wear')
-    compile 'com.google.android.gms:play-services-wearable:10.2.6'
     compile 'com.jjoe64:graphview:4.2.1'
     compile 'com.google.firebase:firebase-database:10.2.6'
     compile 'com.android.support:appcompat-v7:25.3.1'
