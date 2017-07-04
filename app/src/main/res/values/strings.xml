@@ -108,6 +108,8 @@
     <string name="preferences_publish_interval_value">Every %s seconds</string>
     <string name="preferences_keep_alive_key">keepAlive</string>
     <string name="preferences_keep_alive">Continue in background</string>
+    <string name="preference_vibNot_key">vibNot</string>
+    <string name="preference_vibNot_">Vibrate when out of range</string>
     <string name="preferences_publish_key">publishToCloud</string>
     <string name="preferences_publish">Publish to cloud</string>
     <string name="preferences_keep_alive_summary">App will maintain connection to hexiwear when closed.</string>

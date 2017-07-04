@@ -52,6 +52,7 @@ public class HexiwearDevices {
     private static final String SHOULD_TRANSMIT_SUFFIX = "_shouldTransmit";
     private static final String PUBLISH_INTERVAL_SUFFIX = "_publishInterval";
     private static final String KEEP_ALIVE_SUFFIX = "_keepAlive";
+    private static final String VIBRATE_SUFFIX = "_shouldVibrate";
 
     private SharedPreferences preferences;
     private String account;
@@ -190,5 +191,11 @@ public class HexiwearDevices {
     public boolean shouldKeepAlive(final HexiwearDevice device) {
         return preferences.getBoolean(device.getDeviceAddress() + KEEP_ALIVE_SUFFIX, true);
     }
+
+    public boolean shouldVibrate(final HexiwearDevice device)
+    {
+        return preferences.getBoolean(device.getDeviceAddress() + VIBRATE_SUFFIX, true);
+    }
+
 
 }

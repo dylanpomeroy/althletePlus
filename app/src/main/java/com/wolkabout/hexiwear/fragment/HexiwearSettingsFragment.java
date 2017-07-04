@@ -73,6 +73,12 @@ public class HexiwearSettingsFragment extends PreferenceFragment implements Shar
 
     @PreferenceByKey(R.string.preferences_app_version)
     Preference appVersion;
+/*
+    @PreferenceByKey(R.string.preferences_textNot)
+    SwitchPreference textNot;
+*/
+    @PreferenceByKey(R.string.preference_vibNot_key)
+    SwitchPreference vibNot;
 
     @Pref
     Credentials_ credentials;
@@ -102,6 +108,8 @@ public class HexiwearSettingsFragment extends PreferenceFragment implements Shar
         keepAlive.setOnPreferenceChangeListener(this);
         publish.setChecked(hexiwearDevices.shouldTransmit(device));
         publish.setOnPreferenceChangeListener(this);
+        vibNot.setChecked(true);
+        vibNot.setOnPreferenceChangeListener(this);
         manufacturerInfo.setSummary(settingsActivity.manufacturerInfo.manufacturer);
         fwVersion.setSummary(settingsActivity.manufacturerInfo.firmwareRevision);
         appVersion.setSummary(BuildConfig.VERSION_NAME + "." + BuildConfig.FLAVOR.toUpperCase());
