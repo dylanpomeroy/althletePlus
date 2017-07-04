@@ -1,9 +1,14 @@
-package com.wolkabout.hexiwear;
+package com.wolkabout.hexiwear.activity;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.matcher.ViewMatchers;
+import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.wolkabout.hexiwear.R;
+
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -23,20 +28,25 @@ import static org.junit.Assert.*;
  */
 @RunWith(AndroidJUnit4.class)
 public class Pedometer {
+
+    @Rule
+    public ActivityTestRule<PedometerActivity> mActivityRule = new ActivityTestRule<>(
+            PedometerActivity.class);
+
     @Test
     public void useAppContext() throws Exception {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.wolkabout.hexiwear", appContext.getPackageName());
+        assertEquals("com.wolkabout.hexiwear.activity", appContext.getPackageName());
     }
 
-    /*@Test
+    @Test
     public void pedometerButton()throws Exception{
-        onView(withId(R.id.btnReturnToMain)).perform(click());
+        onView(ViewMatchers.withId(R.id.btnReturnToMain)).perform(click());
         //onView(withId(R.id.container_current)).check(matches(R.layout.activity_main));
     }
-
+    /*
     @Test
     public void checkHigh() throws Exception{
         onView(withId(R.id.high_input)).perform(typeText(String.valueOf("15")));
