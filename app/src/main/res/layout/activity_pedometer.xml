@@ -81,9 +81,8 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
                     android:layout_marginTop="0dp"
-                    android:text="High"
-                    android:textSize="24sp"
-                    />
+                    android:text="Notify at"
+                    android:textSize="24sp" />
 
                 <EditText
                     android:id="@+id/high_input"
@@ -92,27 +91,6 @@
                     android:layout_marginBottom="8dp"
                     android:layout_marginRight="52dp"
                     android:layout_marginTop="0dp"
-                    android:ems="10"
-                    android:inputType="number"
-                    />
-
-                <TextView
-                    android:id="@+id/text_low"
-                    android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginTop="0dp"
-                    android:text="Low"
-                    android:textSize="24sp"
-                    />
-
-                <EditText
-                    android:id="@+id/low_input"
-                    android:layout_width="match_parent"
-                    android:layout_height="47dp"
-                    android:layout_marginRight="52dp"
-                    android:layout_marginTop="25dp"
                     android:ems="10"
                     android:inputType="number"
                     />
