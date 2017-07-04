@@ -31,7 +31,7 @@ public class Pedometer {
         assertEquals("com.wolkabout.hexiwear", appContext.getPackageName());
     }
 
-    @Test
+    /*@Test
     public void pedometerButton()throws Exception{
         onView(withId(R.id.btnReturnToMain)).perform(click());
         //onView(withId(R.id.container_current)).check(matches(R.layout.activity_main));
@@ -43,17 +43,9 @@ public class Pedometer {
         onView(withId(R.id.high_input)).check(matches(withText("15")));
     }
 
-    /*@Test
-    public void checkLow() throws Exception{
-        onView(withId(R.id.low_input)).perform(typeText(String.valueOf("15")));
-
-        onView(withId(R.id.low_input)).check(matches(withText("15")));
-
-    }*/
-
     @Test
     public void reset()throws Exception{
         onView(withId(R.id.btnStepReset)).perform(click());
         onView(withId(R.id.text_steps)).check(matches(withText("Total Steps: 0")));
-    }
+    }*/
 }
