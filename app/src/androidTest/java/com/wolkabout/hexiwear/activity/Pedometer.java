@@ -1,12 +1,20 @@
-package com.wolkabout.hexiwear;
+package com.wolkabout.hexiwear.activity;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.matcher.ViewMatchers;
+import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.wolkabout.hexiwear.R;
+import com.wolkabout.hexiwear.activity.PedometerActivity;
+import com.wolkabout.hexiwear.activity.MainActivity_;
+
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
@@ -23,6 +31,13 @@ import static org.junit.Assert.*;
  */
 @RunWith(AndroidJUnit4.class)
 public class Pedometer {
+
+    public boolean inPedo = false;
+
+    @Rule
+    public ActivityTestRule<MainActivity_> mActivityRule = new ActivityTestRule<>(
+            MainActivity_.class);
+
     @Test
     public void useAppContext() throws Exception {
         // Context of the app under test.
@@ -31,21 +46,37 @@ public class Pedometer {
         assertEquals("com.wolkabout.hexiwear", appContext.getPackageName());
     }
 
-    /*@Test
+    @Test
+    public void skipToPedo() throws Exception{
+        onView(withId(R.id.btnSkipPairing)).perform(click());
+        onView(ViewMatchers.withId(R.id.btnPedometer)).perform(click());
+        inPedo = true;
+    }
+
+    @Test
     public void pedometerButton()throws Exception{
-        onView(withId(R.id.btnReturnToMain)).perform(click());
-        //onView(withId(R.id.container_current)).check(matches(R.layout.activity_main));
+        skipToPedo();
+        assertEquals(inPedo, true);
+
+        //onData(ViewMatchers.withId(R.id.btnReturnToMain)).perform(click());
+        //onView(withId(R.id.container_current)).check(matches(withId(R.layout.activity_readings)));
     }
 
     @Test
     public void checkHigh() throws Exception{
+        skipToPedo();
+        assertEquals(inPedo, true);
+
         onView(withId(R.id.high_input)).perform(typeText(String.valueOf("15")));
         onView(withId(R.id.high_input)).check(matches(withText("15")));
     }
 
     @Test
     public void reset()throws Exception{
-        onView(withId(R.id.btnStepReset)).perform(click());
+        skipToPedo();
+        assertEquals(inPedo, true);
+
+        //onData(withId(R.id.btnStepReset)).perform(click());
         onView(withId(R.id.text_steps)).check(matches(withText("Total Steps: 0")));
-    }*/
+    }
 }
