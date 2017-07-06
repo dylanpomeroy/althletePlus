@@ -27,7 +27,7 @@ import java.util.Map;
  */
 @EActivity(R.layout.activity_pedometer)
 public class PedometerActivity extends Activity {
-    private static int rangeHigh,rangeLow;
+    public static int rangeHigh,rangeLow;
     private static int preSessionSteps = 0;
     private DataAccess dataAccess = new DataAccess();
 
