@@ -1,37 +1,34 @@
 package com.wolkabout.hexiwear.activity;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
-import android.support.test.espresso.intent.rule.IntentsTestRule;
-import android.support.test.espresso.matcher.ViewMatchers;
+import android.support.test.espresso.Espresso;
+import android.support.test.espresso.IdlingPolicies;
+import android.support.test.espresso.IdlingResource;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.wolkabout.hexiwear.ElapsedTimeIdlingResource;
 import com.wolkabout.hexiwear.R;
-import com.wolkabout.hexiwear.activity.MainActivity_;
-import com.wolkabout.hexiwear.activity.ReadingsActivity_;
-import com.wolkabout.hexiwear.activity.HeartRateActivity_;
-
+import com.wolkabout.hexiwear.dataAccess.DataAccess;
+import com.wolkabout.hexiwear.dataAccess.Reading;
+import com.wolkabout.hexiwear.dataAccess.ReadingType;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static android.support.test.espresso.Espresso.onData;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
+
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.clearText;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.intent.Intents.intended;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static com.wolkabout.hexiwear.R.id.btnReturnToMain;
 import static junit.framework.Assert.assertEquals;
 
 /**
@@ -56,12 +53,34 @@ public class HeartRate {
         assertEquals("com.wolkabout.hexiwear", appContext.getPackageName());
     }
 
+    @Test
+    // For Acceptance Test 1.1
     public void skipToHeart() throws Exception{
+        // perform button clicks to get to heart rate activity
         onView(withId(R.id.btnSkipPairing)).perform(click());
         onView(withId(R.id.btnHeartRate)).perform(click());
 
         // checks for unique item that exists on the activity that should be open
         onView(withId(R.id.text_heartRate)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    // For Acceptance Test 1.2
+    public void readingUpdates() throws Exception {
+        skipToHeart();
+
+        // mock heart rate data
+        DataAccess dA = new DataAccess();
+        dA.addReading(new Reading(ReadingType.HeartRate, "123", new Date()));
+
+        // wait for 1000 milliseconds... a crazy espresso way
+        IdlingResource idlingResource = new ElapsedTimeIdlingResource(1000);
+        Espresso.registerIdlingResources(idlingResource);
+
+        // validate value is updated and correct
+        onView(withId(R.id.text_heartRate)).check(matches(withText("Heartrate: 123")));
+
+        Espresso.unregisterIdlingResources(idlingResource);
     }
 
     @Test
@@ -76,7 +95,6 @@ public class HeartRate {
     @Test
     public void checkHigh() throws Exception{
         skipToHeart();
-        assertEquals(inHeart, true);
 
         onView(withId(R.id.high_input)).perform(typeText(String.valueOf("100")), closeSoftKeyboard());
         onView(withId(R.id.high_input)).check(matches(withText("100")));
