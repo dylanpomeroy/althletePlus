@@ -38,6 +38,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.*;
 
 /**
@@ -87,6 +89,35 @@ public class Pedometer {
 
         // validate value is updated and correct
         onView(withId(R.id.text_steps)).check(matches(withText("Total Steps: 123")));
+
+        Espresso.unregisterIdlingResources(idlingResource);
+    }
+
+    @Test
+    // For Acceptance Test 3.3
+    public void outOfRangeDetection() throws Exception {
+        skipToPedometer();
+
+        // set upper range we will be exceeding
+        onView(withId(R.id.high_input)).perform(clearText(), typeText(String.valueOf("120")), closeSoftKeyboard());
+        onView(withId(R.id.updateRange)).perform(click());
+
+        // assure that these are false initially
+        assertFalse(ReadingsActivity.notifyHasBeenTriggered);
+        assertFalse(ReadingsActivity.vibrateHasBeenTriggered);
+
+        // send in a mocked reading
+        DataAccess dataAccess = new DataAccess();
+        dataAccess.addReading(new Reading(ReadingType.Steps, "123", new Date()));
+
+        // wait 1000 milliseconds
+        IdlingResource idlingResource = new ElapsedTimeIdlingResource(1000);
+        Espresso.registerIdlingResources(idlingResource);
+        onView(withId(R.id.text_steps)).check(matches(isDisplayed()));
+
+        // check to see range has been exceeded and acted upon
+        assertTrue(ReadingsActivity.notifyHasBeenTriggered);
+        assertTrue(ReadingsActivity.vibrateHasBeenTriggered);
 
         Espresso.unregisterIdlingResources(idlingResource);
     }
