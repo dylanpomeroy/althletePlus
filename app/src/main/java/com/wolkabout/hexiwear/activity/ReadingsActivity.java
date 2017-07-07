@@ -218,9 +218,9 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
     void setViews() {
         toolbar.setTitle(hexiwearDevice.getWolkName());
         setSupportActionBar(toolbar);
-        progressBar.setVisibility(View.VISIBLE);
+        if (!skippingHexiConnection)
+            progressBar.setVisibility(View.VISIBLE);
     }
-
     @Override
     protected void onResume() {
         super.onResume();

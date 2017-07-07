@@ -52,7 +52,7 @@ public class HeartRate {
 
     public void skipToHeart() throws Exception{
         onView(withId(R.id.btnSkipPairing)).perform(click());
-        onView(ViewMatchers.withId(R.id.btnHeartRate)).perform(click());
+        onView(withId(R.id.btnHeartRate)).perform(click());
         inHeart = true;
     }
 
