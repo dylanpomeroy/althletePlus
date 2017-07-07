@@ -65,7 +65,6 @@ public class Pedometer {
         skipToPedo();
         assertEquals(inPedo, true);
 
-        //onView(ViewMatchers.withId(R.id.btnReturnToMain)).perform(click());
         onView(withId(R.id.btnReturnToMain)).perform(closeSoftKeyboard(), click());
         //intended(hasComponent(new ComponentName(getTargetContext(), ReadingsActivity.class)));
     }
@@ -84,9 +83,11 @@ public class Pedometer {
         skipToPedo();
         assertEquals(inPedo, true);
 
-        //onView(withId(R.id.high_input)).perform(clearText(), typeText("15"), closeSoftKeyboard());
-        onView(withText(R.id.updateRange)).perform(closeSoftKeyboard(), click());
-        //onView(withId(R.id.high_input)).check(matches(withText("15")));
+        onView(withId(R.id.high_input)).perform(clearText(), typeText("15"), closeSoftKeyboard());
+
+        onView(withId(R.id.updateRange)).perform(closeSoftKeyboard(), click());
+
+        onView(withId(R.id.high_input)).check(matches(withText("15")));
 
     }
 
