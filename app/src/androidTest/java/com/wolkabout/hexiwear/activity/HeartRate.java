@@ -87,7 +87,7 @@ public class HeartRate {
     }
 
     @Test
-    // For Acceptance Test 10.3
+    // For Acceptance Test 10.1
     public void outOfRangeVibrate() throws Exception {
         skipToHeart();
 
@@ -109,6 +109,33 @@ public class HeartRate {
 
         // check to see range has been exceeded and acted upon
         assertTrue(ReadingsActivity.vibrateHasBeenTriggered);
+
+        Espresso.unregisterIdlingResources(idlingResource);
+    }
+
+    @Test
+    // For Acceptance Test 10.2
+    public void inRangeNoVibrate() throws Exception {
+        skipToHeart();
+
+        // set upper range we will be exceeding
+        onView(withId(R.id.high_input)).perform(clearText(), typeText(String.valueOf("123")), closeSoftKeyboard());
+        onView(withId(R.id.updateRange)).perform(click());
+
+        // assure that these are false initially
+        assertFalse(ReadingsActivity.vibrateHasBeenTriggered);
+
+        // send in a mocked reading
+        DataAccess dataAccess = new DataAccess();
+        dataAccess.addReading(new Reading(ReadingType.HeartRate, "120", new Date()));
+
+        // wait 1000 milliseconds
+        IdlingResource idlingResource = new ElapsedTimeIdlingResource(1000);
+        Espresso.registerIdlingResources(idlingResource);
+        onView(withId(R.id.text_heartRate)).check(matches(isDisplayed()));
+
+        // check to see range has been exceeded and acted upon
+        assertFalse(ReadingsActivity.vibrateHasBeenTriggered);
 
         Espresso.unregisterIdlingResources(idlingResource);
     }
