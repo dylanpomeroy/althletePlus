@@ -139,6 +139,8 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
     // To vibrate watch:
     //  set shouldVibrate to true
     //  optionally set vibrateDuration value in milliseconds
+    public static boolean notifyHasBeenTriggered = false;
+    public static boolean vibrateHasBeenTriggered = false;
     private static int vibrateDurationDefault = 1000;
     public static boolean shouldVibrate = false;
     public static boolean shouldNotify = false;
@@ -147,12 +149,13 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
     @AfterViews
     public void checkForRequests(){
         if (shouldVibrate){
+            vibrateHasBeenTriggered = true;
             shouldVibrate = false;
             vibrateWatch(vibrateDuration);
             vibrateDuration = vibrateDurationDefault;
         }
-        if (shouldNotify)
-        {
+        if (shouldNotify) {
+            notifyHasBeenTriggered = true;
             dialog.shortToast(notifyText);
             shouldNotify = false;
         }
@@ -218,9 +221,9 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
     void setViews() {
         toolbar.setTitle(hexiwearDevice.getWolkName());
         setSupportActionBar(toolbar);
-        progressBar.setVisibility(View.VISIBLE);
+        if (!skippingHexiConnection)
+            progressBar.setVisibility(View.VISIBLE);
     }
-
     @Override
     protected void onResume() {
         super.onResume();
