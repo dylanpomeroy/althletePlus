@@ -26,6 +26,7 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.Assert.assertEquals;
@@ -54,15 +55,18 @@ public class Pedometer {
     }
 
     @Test
-    public void skipToPedo() throws Exception{
+    // For Acceptance Test 3.1
+    public void skipToPedometer() throws Exception{
         onView(withId(R.id.btnSkipPairing)).perform(click());
         onView(ViewMatchers.withId(R.id.btnPedometer)).perform(click());
-        inPedo = true;
+
+        // checks for unique item that exists on the activity that should be open
+        onView(withId(R.id.text_steps)).check(matches(isDisplayed()));
     }
 
     @Test
     public void pedometerButton()throws Exception{
-        skipToPedo();
+        skipToPedometer();
         assertEquals(inPedo, true);
 
         onView(withId(R.id.btnReturnToMain)).perform(closeSoftKeyboard(), click());
@@ -71,7 +75,7 @@ public class Pedometer {
 
     @Test
     public void checkHigh() throws Exception{
-        skipToPedo();
+        skipToPedometer();
         assertEquals(inPedo, true);
 
         onView(withId(R.id.high_input)).perform(clearText(), typeText(String.valueOf("15")), closeSoftKeyboard());
@@ -80,7 +84,7 @@ public class Pedometer {
 
     @Test
     public void testRange() throws Exception{
-        skipToPedo();
+        skipToPedometer();
         assertEquals(inPedo, true);
 
         onView(withId(R.id.high_input)).perform(clearText(), typeText("15"), closeSoftKeyboard());
@@ -93,7 +97,7 @@ public class Pedometer {
 
     @Test
     public void reset()throws Exception{
-        skipToPedo();
+        skipToPedometer();
         assertEquals(inPedo, true);
 
         onView(withId(R.id.btnStepReset)).perform(closeSoftKeyboard(), click());
