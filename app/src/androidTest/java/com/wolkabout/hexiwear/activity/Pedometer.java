@@ -95,7 +95,7 @@ public class Pedometer {
 
     @Test
     // For Acceptance Test 3.3
-    public void outOfRangeDetection() throws Exception {
+    public void outOfRangeVibrate() throws Exception {
         skipToPedometer();
 
         // set upper range we will be exceeding
@@ -103,7 +103,6 @@ public class Pedometer {
         onView(withId(R.id.updateRange)).perform(click());
 
         // assure that these are false initially
-        assertFalse(ReadingsActivity.notifyHasBeenTriggered);
         assertFalse(ReadingsActivity.vibrateHasBeenTriggered);
 
         // send in a mocked reading
@@ -116,8 +115,34 @@ public class Pedometer {
         onView(withId(R.id.text_steps)).check(matches(isDisplayed()));
 
         // check to see range has been exceeded and acted upon
-        assertTrue(ReadingsActivity.notifyHasBeenTriggered);
         assertTrue(ReadingsActivity.vibrateHasBeenTriggered);
+
+        Espresso.unregisterIdlingResources(idlingResource);
+    }
+
+    @Test
+    // For Acceptance Test 4.1
+    public void outOfRangeAlert() throws Exception {
+        skipToPedometer();
+
+        // set upper range we will be exceeding
+        onView(withId(R.id.high_input)).perform(clearText(), typeText(String.valueOf("120")), closeSoftKeyboard());
+        onView(withId(R.id.updateRange)).perform(click());
+
+        // assure that these are false initially
+        assertFalse(ReadingsActivity.notifyHasBeenTriggered);
+
+        // send in a mocked reading
+        DataAccess dataAccess = new DataAccess();
+        dataAccess.addReading(new Reading(ReadingType.Steps, "123", new Date()));
+
+        // wait 1000 milliseconds
+        IdlingResource idlingResource = new ElapsedTimeIdlingResource(1000);
+        Espresso.registerIdlingResources(idlingResource);
+        onView(withId(R.id.text_steps)).check(matches(isDisplayed()));
+
+        // check to see range has been exceeded and acted upon
+        assertTrue(ReadingsActivity.notifyHasBeenTriggered);
 
         Espresso.unregisterIdlingResources(idlingResource);
     }
