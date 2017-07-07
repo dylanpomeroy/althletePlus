@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.clearText;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.typeText;
@@ -30,6 +31,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
 
 /**
  * Robert Thomas Jun.29th from example in story 3 branch
@@ -79,6 +82,33 @@ public class HeartRate {
 
         // validate value is updated and correct
         onView(withId(R.id.text_heartRate)).check(matches(withText("Heartrate: 123")));
+
+        Espresso.unregisterIdlingResources(idlingResource);
+    }
+
+    @Test
+    // For Acceptance Test 4.2
+    public void outOfRangeAlert() throws Exception {
+        skipToHeart();
+
+        // set upper range we will be exceeding
+        onView(withId(R.id.high_input)).perform(clearText(), typeText(String.valueOf("120")), closeSoftKeyboard());
+        onView(withId(R.id.updateRange)).perform(click());
+
+        // assure that these are false initially
+        assertFalse(ReadingsActivity.notifyHasBeenTriggered);
+
+        // send in a mocked reading
+        DataAccess dataAccess = new DataAccess();
+        dataAccess.addReading(new Reading(ReadingType.HeartRate, "123", new Date()));
+
+        // wait 1000 milliseconds
+        IdlingResource idlingResource = new ElapsedTimeIdlingResource(1000);
+        Espresso.registerIdlingResources(idlingResource);
+        onView(withId(R.id.text_heartRate)).check(matches(isDisplayed()));
+
+        // check to see range has been exceeded and acted upon
+        assertTrue(ReadingsActivity.notifyHasBeenTriggered);
 
         Espresso.unregisterIdlingResources(idlingResource);
     }
