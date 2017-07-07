@@ -21,7 +21,9 @@ import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.clearText;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
@@ -29,6 +31,7 @@ import static android.support.test.espresso.intent.matcher.IntentMatchers.hasCom
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static com.wolkabout.hexiwear.R.id.btnReturnToMain;
 import static junit.framework.Assert.assertEquals;
 
 /**
@@ -53,7 +56,6 @@ public class HeartRate {
         assertEquals("com.wolkabout.hexiwear", appContext.getPackageName());
     }
 
-    @Test
     public void skipToHeart() throws Exception{
         onView(withId(R.id.btnSkipPairing)).perform(click());
         onView(withId(R.id.btnHeartRate)).perform(click());
@@ -67,7 +69,7 @@ public class HeartRate {
         skipToHeart();
         assertEquals(inHeart, true);
 
-        //onData(ViewMatchers.withId(R.id.btnReturnToMain)).perform(click());
+        //onView(withId(R.id.btnReturnToMain)).perform(closeSoftKeyboard(), click());
         //onView(withId(R.id.container_current)).check(matches(withId(R.layout.activity_readings)));
     }
 
@@ -76,7 +78,7 @@ public class HeartRate {
         skipToHeart();
         assertEquals(inHeart, true);
 
-        onView(withId(R.id.high_input)).perform(typeText(String.valueOf("100")));
+        onView(withId(R.id.high_input)).perform(typeText(String.valueOf("100")), closeSoftKeyboard());
         onView(withId(R.id.high_input)).check(matches(withText("100")));
     }
 
@@ -85,8 +87,23 @@ public class HeartRate {
         skipToHeart();
         assertEquals(inHeart, true);
 
-        onView(withId(R.id.low_input)).perform(typeText(String.valueOf("10")));
-        onView(withId(R.id.low_input)).check(matches(withText("10")));
+        onView(withId(R.id.low_input)).perform(closeSoftKeyboard(), typeText(String.valueOf("0")), closeSoftKeyboard());
+        onView(withId(R.id.low_input)).check(matches(withText("0")));
+    }
+
+    @Test
+    public void testRange() throws Exception{
+        skipToHeart();
+        assertEquals(inHeart, true);
+
+        onView(withId(R.id.high_input)).perform(typeText(String.valueOf("100")), closeSoftKeyboard());
+        onView(withId(R.id.low_input)).perform(typeText(String.valueOf("0")), closeSoftKeyboard());
+
+        onView(withId(R.id.updateRange)).perform(closeSoftKeyboard(), click());
+
+        onView(withId(R.id.high_input)).check(matches(withText("100")));
+        onView(withId(R.id.low_input)).check(matches(withText("0")));
+
     }
 
 }

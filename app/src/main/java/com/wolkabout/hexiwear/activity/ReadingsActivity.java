@@ -141,12 +141,20 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
     //  optionally set vibrateDuration value in milliseconds
     private static int vibrateDurationDefault = 1000;
     public static boolean shouldVibrate = false;
+    public static boolean shouldNotify = false;
+    public static String notifyText;
     public static int vibrateDuration = vibrateDurationDefault;
-    private void checkForRequests(){
+    @AfterViews
+    public void checkForRequests(){
         if (shouldVibrate){
             shouldVibrate = false;
             vibrateWatch(vibrateDuration);
             vibrateDuration = vibrateDurationDefault;
+        }
+        if (shouldNotify)
+        {
+            dialog.shortToast(notifyText);
+            shouldNotify = false;
         }
 
         // re-call this method in 200ms

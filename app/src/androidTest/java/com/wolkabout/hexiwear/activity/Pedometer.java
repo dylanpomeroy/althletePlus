@@ -1,7 +1,9 @@
 package com.wolkabout.hexiwear.activity;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.core.deps.dagger.Component;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -9,14 +11,19 @@ import android.support.test.runner.AndroidJUnit4;
 import com.wolkabout.hexiwear.R;
 import com.wolkabout.hexiwear.activity.PedometerActivity;
 import com.wolkabout.hexiwear.activity.MainActivity_;
+import com.wolkabout.hexiwear.activity.ReadingsActivity_;
 
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.clearText;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -41,7 +48,7 @@ public class Pedometer {
     @Test
     public void useAppContext() throws Exception {
         // Context of the app under test.
-        Context appContext = InstrumentationRegistry.getTargetContext();
+        Context appContext = getTargetContext();
 
         assertEquals("com.wolkabout.hexiwear", appContext.getPackageName());
     }
@@ -58,8 +65,8 @@ public class Pedometer {
         skipToPedo();
         assertEquals(inPedo, true);
 
-        //onData(ViewMatchers.withId(R.id.btnReturnToMain)).perform(click());
-        //onView(withId(R.id.container_current)).check(matches(withId(R.layout.activity_readings)));
+        onView(withId(R.id.btnReturnToMain)).perform(closeSoftKeyboard(), click());
+        //intended(hasComponent(new ComponentName(getTargetContext(), ReadingsActivity.class)));
     }
 
     @Test
@@ -67,8 +74,21 @@ public class Pedometer {
         skipToPedo();
         assertEquals(inPedo, true);
 
-        onView(withId(R.id.high_input)).perform(typeText(String.valueOf("15")));
+        onView(withId(R.id.high_input)).perform(clearText(), typeText(String.valueOf("15")), closeSoftKeyboard());
         onView(withId(R.id.high_input)).check(matches(withText("15")));
+    }
+
+    @Test
+    public void testRange() throws Exception{
+        skipToPedo();
+        assertEquals(inPedo, true);
+
+        onView(withId(R.id.high_input)).perform(clearText(), typeText("15"), closeSoftKeyboard());
+
+        onView(withId(R.id.updateRange)).perform(closeSoftKeyboard(), click());
+
+        onView(withId(R.id.high_input)).check(matches(withText("15")));
+
     }
 
     @Test
@@ -76,7 +96,7 @@ public class Pedometer {
         skipToPedo();
         assertEquals(inPedo, true);
 
-        //onData(withId(R.id.btnStepReset)).perform(click());
+        onView(withId(R.id.btnStepReset)).perform(closeSoftKeyboard(), click());
         onView(withId(R.id.text_steps)).check(matches(withText("Total Steps: 0")));
     }
 }

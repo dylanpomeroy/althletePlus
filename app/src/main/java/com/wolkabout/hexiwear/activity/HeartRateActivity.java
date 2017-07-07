@@ -3,6 +3,7 @@ package com.wolkabout.hexiwear.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -42,10 +43,18 @@ public class HeartRateActivity extends Activity {
 
     @AfterViews
     protected void setHeartRateVisibility() {
-        int heartRate = Integer.parseInt(dataAccess.getCurrentReading(ReadingType.HeartRate).value);
+        int heartRate = Integer.parseInt(dataAccess.getCurrentReading(ReadingType.HeartRate).value.split(" ")[0]);
 
         TextView textView = (TextView) findViewById(R.id.text_heartRate);
         textView.setText("Heartrate: "+ heartRate);
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run(){
+                setHeartRateVisibility();
+            }
+        }, 500);
 
         updateRange(new View(this));
 
@@ -53,7 +62,17 @@ public class HeartRateActivity extends Activity {
         if (heartRate > rangeHigh || heartRate < rangeLow){
             ReadingsActivity.vibrateDuration = 500;
             ReadingsActivity.shouldVibrate = true;
+            ReadingsActivity.shouldNotify = true;
+            if (heartRate > rangeHigh)
+            {
+                ReadingsActivity.notifyText = "Heart rate exceeding range!";
+            }
+            else if (heartRate < rangeLow)
+            {
+                ReadingsActivity.notifyText = "Heart rate is too low, get out dem whips";
+            }
         }
+
     }
 
     @Click(R.id.returnToMain)
