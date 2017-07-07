@@ -3,20 +3,28 @@ package com.wolkabout.hexiwear.activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.Espresso;
+import android.support.test.espresso.IdlingResource;
 import android.support.test.espresso.core.deps.dagger.Component;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.wolkabout.hexiwear.ElapsedTimeIdlingResource;
 import com.wolkabout.hexiwear.R;
 import com.wolkabout.hexiwear.activity.PedometerActivity;
 import com.wolkabout.hexiwear.activity.MainActivity_;
 import com.wolkabout.hexiwear.activity.ReadingsActivity_;
+import com.wolkabout.hexiwear.dataAccess.DataAccess;
+import com.wolkabout.hexiwear.dataAccess.Reading;
+import com.wolkabout.hexiwear.dataAccess.ReadingType;
 
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.util.Date;
 
 import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static android.support.test.espresso.Espresso.onData;
@@ -62,6 +70,25 @@ public class Pedometer {
 
         // checks for unique item that exists on the activity that should be open
         onView(withId(R.id.text_steps)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    // For Acceptance Test 3.2
+    public void readingUpdates() throws Exception{
+        skipToPedometer();
+
+        // mock heart rate data
+        DataAccess dA = new DataAccess();
+        dA.addReading(new Reading(ReadingType.Steps, "123", new Date()));
+
+        // wait for 1000 milliseconds... a crazy espresso way
+        IdlingResource idlingResource = new ElapsedTimeIdlingResource(1000);
+        Espresso.registerIdlingResources(idlingResource);
+
+        // validate value is updated and correct
+        onView(withId(R.id.text_steps)).check(matches(withText("Total Steps: 123")));
+
+        Espresso.unregisterIdlingResources(idlingResource);
     }
 
     @Test
