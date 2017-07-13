@@ -166,7 +166,7 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
             public void run(){
                 checkForRequests();
             }
-        }, 200);
+        }, 1000);
     }
 
     private void vibrateWatch(int milliseconds){

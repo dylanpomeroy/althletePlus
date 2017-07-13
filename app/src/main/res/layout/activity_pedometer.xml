@@ -85,15 +85,14 @@
                     android:textSize="24sp" />
 
                 <EditText
-                    android:id="@+id/high_input"
+                    android:id="@+id/threshold"
                     android:layout_width="match_parent"
                     android:layout_height="47dp"
                     android:layout_marginBottom="8dp"
                     android:layout_marginRight="52dp"
                     android:layout_marginTop="0dp"
                     android:ems="10"
-                    android:inputType="number"
-                    />
+                    android:inputType="number" />
 
                 <Button
                     android:id="@+id/updateRange"

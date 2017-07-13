@@ -30,11 +30,16 @@ public class PedometerActivity extends Activity {
     public static int rangeHigh,rangeLow;
     public static int preSessionSteps = 0;
     private DataAccess dataAccess = new DataAccess();
+    private boolean toastNotification = false;
+    private boolean shouldCall = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        toastNotification = false;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pedometer);
+        rangeHigh = 0;
+        shouldCall = true;
     }
 
     //reading the steps from hexiwear from readings activity
@@ -47,29 +52,30 @@ public class PedometerActivity extends Activity {
         TextView textView = (TextView) findViewById(R.id.text_steps);
         textView.setText("Total Steps: "+sessionSteps);
 
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run(){
-                setPedometerVisibility();
-            }
-        }, 500);
-
-        updateRange(new View(this));
+        if (shouldCall) {
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    setPedometerVisibility();
+                }
+            }, 3000);
+        }
+        //updateRange(new View(this));
 
         // vibrate if not in range
-        if (sessionSteps > rangeHigh ){
+        if(toastNotification) {
+            toastNotification = false;
+            if (sessionSteps > rangeHigh && rangeHigh > 0) {
+                ReadingsActivity.shouldNotify = true;
+                if (sessionSteps > rangeHigh) {
+                    ReadingsActivity.notifyText = "He's hustling hard!";
+                }
+            }
+        }
+        if (sessionSteps > rangeHigh && rangeHigh > 0) {
             ReadingsActivity.vibrateDuration = 500;
             ReadingsActivity.shouldVibrate = true;
-            ReadingsActivity.shouldNotify = true;
-            if (sessionSteps > rangeHigh)
-            {
-                ReadingsActivity.notifyText = "He's hustling hard!";
-            }
-            else if (sessionSteps < rangeLow)
-            {
-                ReadingsActivity.notifyText = "Grab some whips he's slacking";
-            }
         }
     }
 
@@ -84,16 +90,17 @@ public class PedometerActivity extends Activity {
 
     @Click(R.id.btnReturnToMain)
     public void returnToMain(View view) {
+        shouldCall = false;
         Intent intent = new Intent(this, ReadingsActivity_.class);
         startActivity(intent);
     }
-
+    @Click(R.id.updateRange)
     public void updateRange(View view){
 
         //read text from high_input and convert to string
-        EditText textHigh = (EditText) findViewById(R.id.high_input);
+        EditText textHigh = (EditText) findViewById(R.id.threshold);
         String highString = textHigh.getText().toString();
-
+        toastNotification = true;
         //read text from low_input and convert to string
         //EditText textLow = (EditText) findViewById(R.id.low_input);
         //String lowString = textLow.getText().toString();

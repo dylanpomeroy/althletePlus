@@ -31,12 +31,14 @@ import java.util.Map;
 public class HeartRateActivity extends Activity {
     static int rangeHigh,rangeLow;
     private DataAccess dataAccess = new DataAccess();
-
+    private boolean toastNotification = false;
+    private boolean shouldCall = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_heartrate);
+        shouldCall = true;
     }
 
     //reading the steps from hexiwear from readings activity
@@ -54,22 +56,23 @@ public class HeartRateActivity extends Activity {
             public void run(){
                 setHeartRateVisibility();
             }
-        }, 500);
+        }, 3000);
 
-        updateRange(new View(this));
+        if(shouldCall) updateRange(new View(this));
 
         // vibrate if not in range
-        if (heartRate > rangeHigh || heartRate < rangeLow){
+        if ((heartRate > rangeHigh || heartRate < rangeLow) && rangeHigh > 0 && heartRate != 0){
             ReadingsActivity.vibrateDuration = 500;
             ReadingsActivity.shouldVibrate = true;
-            ReadingsActivity.shouldNotify = true;
-            if (heartRate > rangeHigh)
-            {
-                ReadingsActivity.notifyText = "Heart rate exceeding range!";
-            }
-            else if (heartRate < rangeLow)
-            {
-                ReadingsActivity.notifyText = "Heart rate is too low, get out dem whips";
+            if(toastNotification) {
+                toastNotification = false;
+                ReadingsActivity.shouldNotify = true;
+
+                if (heartRate > rangeHigh) {
+                    ReadingsActivity.notifyText = "Heart rate exceeding range!";
+                } else if (heartRate < rangeLow) {
+                    ReadingsActivity.notifyText = "Heart rate is too low, get out dem whips";
+                }
             }
         }
 
@@ -77,6 +80,9 @@ public class HeartRateActivity extends Activity {
 
     @Click(R.id.returnToMain)
     public void returnToMain(View view) {
+        ReadingsActivity.shouldVibrate = false;
+        ReadingsActivity.shouldNotify = false;
+        shouldCall = false;
         Intent intent = new Intent(this, ReadingsActivity_.class);
         startActivity(intent);
     }
@@ -92,6 +98,7 @@ public class HeartRateActivity extends Activity {
         EditText textLow = (EditText) findViewById(R.id.low_input);
         String lowString = textLow.getText().toString();
 
+        toastNotification = true;
         //if the string is not empty, set the static range variable to the parsed int
         //only numbers are able to be entered becasue the input type is number
         if(!highString.equals("")) rangeHigh=Integer.parseInt(highString);
