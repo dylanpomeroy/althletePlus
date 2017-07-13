@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".activity.ReadingsActivity">
+    tools:context=".activity.ReadingsActivity"
+    android:background="@color/hint">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -58,20 +59,23 @@
                 android:id="@+id/btnPedometer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Pedometer" />
+                android:text="Pedometer"
+                android:textColor="@color/black"/>
 
             <Button
                 android:id="@+id/btnHeartRate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Heartrate" />
+                android:text="Heartrate"
+                android:textColor="@color/black"/>
 
             <Button
                 android:id="@+id/btnAlertAlthlete"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Alert Althlete" />
+                android:text="Alert Althlete"
+                android:textColor="@color/black"/>
         </LinearLayout>
     </ScrollView>
 
