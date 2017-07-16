@@ -185,7 +185,6 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
     public void alertAlthlete(int milliseconds){
         // modify button appearance
         final Button button = (Button)findViewById(R.id.btnAlertAlthlete);
-        button.setBackgroundColor(Color.YELLOW);
         button.setText("Alerting Althete...");
         button.setEnabled(false);
 
@@ -196,7 +195,6 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
         handler.postDelayed(new Runnable() {
             @Override
             public void run(){
-                button.setBackgroundResource(android.R.drawable.btn_default);
                 button.setText("Alert Althlete");
                 button.setEnabled(true);
             }
