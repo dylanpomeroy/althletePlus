@@ -383,6 +383,7 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
         final boolean shouldTransmit = hexiwearDevices.shouldTransmit(device);
         final int icon = shouldTransmit ? R.drawable.ic_cloud_queue_white_48dp : R.drawable.ic_cloud_off_white_48dp;
         menu.getItem(0).setIcon(icon);
+        menu.getItem(0).setVisible(false);
         return super.onPrepareOptionsMenu(menu);
     }
 
