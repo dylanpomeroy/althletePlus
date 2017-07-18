@@ -94,9 +94,6 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
     Toolbar toolbar;
 
     @ViewById
-    TextView connectionStatus;
-
-    @ViewById
     ProgressBar progressBar;
 
     @Bean
@@ -205,7 +202,6 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
     public void alertAlthlete(int milliseconds){
         // modify button appearance
         final Button button = (Button)findViewById(R.id.btnAlertAlthlete);
-        button.setBackgroundColor(Color.YELLOW);
         button.setText("Alerting Althete...");
         button.setEnabled(false);
 
@@ -216,7 +212,6 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
         handler.postDelayed(new Runnable() {
             @Override
             public void run(){
-                button.setBackgroundResource(android.R.drawable.btn_default);
                 button.setText("Alert Althlete");
                 button.setEnabled(true);
             }
@@ -254,7 +249,6 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
     @Receiver(actions = BluetoothService.MODE_CHANGED, local = true)
     void onModeChanged(@Receiver.Extra final Mode mode) {
         this.mode = mode;
-        connectionStatus.setText(mode.getStringResource());
 
         if (mode == Mode.IDLE) {
             dialog.showInfo(R.string.readings_idle_mode, false);
@@ -327,13 +321,7 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
 
     @Receiver(actions = BluetoothService.ACTION_NEEDS_BOND, local = true)
     void onBondRequested() {
-        connectionStatus.setText(R.string.discovery_pairing);
         Snackbar.make(coordinator, R.string.discovery_pairing, Snackbar.LENGTH_LONG).show();
-    }
-
-    @Receiver(actions = BluetoothService.CONNECTION_STATE_CHANGED, local = true)
-    void onConnectionStateChanged(@Receiver.Extra final boolean connectionState) {
-        connectionStatus.setText(connectionState ? R.string.readings_connection_connected : R.string.readings_connection_reconnecting);
     }
 
     @Receiver(actions = BluetoothService.DATA_AVAILABLE, local = true)
@@ -403,6 +391,7 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
         final boolean shouldTransmit = hexiwearDevices.shouldTransmit(device);
         final int icon = shouldTransmit ? R.drawable.ic_cloud_queue_white_48dp : R.drawable.ic_cloud_off_white_48dp;
         menu.getItem(0).setIcon(icon);
+        menu.getItem(0).setVisible(false);
         return super.onPrepareOptionsMenu(menu);
     }
 

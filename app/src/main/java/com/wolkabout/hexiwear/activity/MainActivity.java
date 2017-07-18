@@ -30,6 +30,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
@@ -106,6 +107,12 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
     Dialog dialog;
 
     private boolean serviceBound;
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.clear();
+        return super.onPrepareOptionsMenu(menu);
+    }
 
     @Click(R.id.btnSkipPairing)
     void skipPairing(){
