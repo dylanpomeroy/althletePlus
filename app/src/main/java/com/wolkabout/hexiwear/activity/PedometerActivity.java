@@ -47,9 +47,7 @@ public class PedometerActivity extends Activity {
 
     /**
      * function that is automatically called and calls its self every 3000ms
-     * It gets the latest reading form the hexiware and if out of range, lanched notifications
-     *
-     * @param  variable Description text text text.
+     * It gets the latest reading form the hexiware and if out of range, lanched notification
      */
     @AfterViews
     protected void setPedometerVisibility() {
