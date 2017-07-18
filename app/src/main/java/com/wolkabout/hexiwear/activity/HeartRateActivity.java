@@ -34,6 +34,10 @@ public class HeartRateActivity extends Activity {
     private boolean toastNotification = false;
     private boolean shouldCall = false;
 
+    /**
+     * Create the view, and sets a bool to let the polling function be called
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +47,10 @@ public class HeartRateActivity extends Activity {
 
     //reading the steps from hexiwear from readings activity
 
+    /**
+     * function that is continiusly called, checks if data is out of range, and updates the on
+     * screen live data
+     */
     @AfterViews
     protected void setHeartRateVisibility() {
         int heartRate = Integer.parseInt(dataAccess.getCurrentReading(ReadingType.HeartRate).value.split(" ")[0]);
@@ -78,6 +86,11 @@ public class HeartRateActivity extends Activity {
 
     }
 
+    /**
+     * returns to the readings activity view
+     *
+     * @param view
+     */
     @Click(R.id.returnToMain)
     public void returnToMain(View view) {
         ReadingsActivity.shouldVibrate = false;
@@ -87,6 +100,12 @@ public class HeartRateActivity extends Activity {
         startActivity(intent);
     }
 
+    /**
+     * gets the most recent range from the input box, this methode is called when the button is
+     * click and ain setHeartRate Visibility
+     *
+     * @param view
+     */
     @Click(R.id.updateRange)
     public void updateRange(View view){
 

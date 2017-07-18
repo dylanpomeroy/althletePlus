@@ -33,6 +33,9 @@ public class PedometerActivity extends Activity {
     private boolean toastNotification = false;
     private boolean shouldCall = false;
 
+    /**
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         toastNotification = false;
@@ -42,8 +45,12 @@ public class PedometerActivity extends Activity {
         shouldCall = true;
     }
 
-    //reading the steps from hexiwear from readings activity
-
+    /**
+     * function that is automatically called and calls its self every 3000ms
+     * It gets the latest reading form the hexiware and if out of range, lanched notifications
+     *
+     * @param  variable Description text text text.
+     */
     @AfterViews
     protected void setPedometerVisibility() {
         int totalSteps = Integer.parseInt(dataAccess.getCurrentReading(ReadingType.Steps).value.trim());
@@ -79,6 +86,12 @@ public class PedometerActivity extends Activity {
         }
     }
 
+
+    /**
+     * resets the pedo-meter count
+     *
+     * @param view
+     */
     @Click(R.id.btnStepReset)
     protected void reset(View view){
         int totalSteps = Integer.parseInt(dataAccess.getCurrentReading(ReadingType.Steps).value.trim());
@@ -88,12 +101,23 @@ public class PedometerActivity extends Activity {
         textView.setText("Total Steps: 0");
     }
 
+    /**
+     * returns the user back to readingsActivity
+     *
+     * @param view
+     */
     @Click(R.id.btnReturnToMain)
     public void returnToMain(View view) {
         shouldCall = false;
         Intent intent = new Intent(this, ReadingsActivity_.class);
         startActivity(intent);
     }
+
+    /**
+     * gets the range from the input box that the user entered
+     *
+     * @param view
+     */
     @Click(R.id.updateRange)
     public void updateRange(View view){
 
@@ -101,18 +125,12 @@ public class PedometerActivity extends Activity {
         EditText textHigh = (EditText) findViewById(R.id.threshold);
         String highString = textHigh.getText().toString();
         toastNotification = true;
-        //read text from low_input and convert to string
-        //EditText textLow = (EditText) findViewById(R.id.low_input);
-        //String lowString = textLow.getText().toString();
 
         //if the string is not empty, set the static range variable to the parsed int
         //only numbers are able to be entered becasue the input type is number
         if(!highString.equals("")) rangeHigh=Integer.parseInt(highString);
         else rangeHigh=0;
 
-        //commenting out low end since that is not helpful for the client with pedometer
-       // if(!lowString.equals("")) rangeLow=Integer.parseInt(lowString);
-        //else rangeLow=0;
 
         //take text and enter in database
         //enter variables rangeHigh and rangeLow into database

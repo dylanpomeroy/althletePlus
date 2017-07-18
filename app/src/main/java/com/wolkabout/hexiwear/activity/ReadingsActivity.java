@@ -117,6 +117,9 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
 
     private int notificationCount = 0;
 
+    /**
+     * @param view
+     */
     @Click(R.id.btnPedometer)
     public void switchToPedometer(View view) {
         dataAccess.addReading(new Reading(ReadingType.Steps, "0", new Date()));
@@ -124,6 +127,9 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
         startActivity(intent);
     }
 
+    /**
+     * @param view
+     */
     @Click(R.id.btnHeartRate)
     public void switchToHeartRate(View view) {
         dataAccess.addReading(new Reading(ReadingType.HeartRate, "0", new Date()));
@@ -146,6 +152,10 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
     public static boolean shouldNotify = false;
     public static String notifyText;
     public static int vibrateDuration = vibrateDurationDefault;
+
+    /**
+     * checks to see if the heart or pedo have requested any notifications, is recalled once a second
+     */
     @AfterViews
     public void checkForRequests(){
         if (shouldVibrate){
@@ -169,6 +179,11 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
         }, 1000);
     }
 
+    /**
+     * vibrates the watch for an interval taken as param
+     *
+     * @param milliseconds
+     */
     private void vibrateWatch(int milliseconds){
         bluetoothService.queueNotification((byte) 2, notificationCount);
         final Handler handler = new Handler();
@@ -182,6 +197,11 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
         }
     }
 
+    /**
+     * used to alert the athelete via vibration
+     *
+     * @param milliseconds
+     */
     public void alertAlthlete(int milliseconds){
         // modify button appearance
         final Button button = (Button)findViewById(R.id.btnAlertAlthlete);
