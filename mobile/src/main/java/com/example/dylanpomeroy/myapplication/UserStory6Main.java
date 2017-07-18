@@ -42,7 +42,7 @@ public class UserStory6Main extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_firebase_test);
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         spinner_1 = (Spinner) findViewById(R.id.spinzy);
         pullData = (TextView) findViewById(R.id.sampletext);
@@ -73,6 +73,15 @@ public class UserStory6Main extends AppCompatActivity {
             }
         });
 
+    }
+
+    /**
+     *
+     */
+    @Override
+    public boolean onSupportNavigateUp(){
+        finish();
+        return true;
     }
 
     /**
@@ -153,8 +162,8 @@ public class UserStory6Main extends AppCompatActivity {
     public void submitInfoButton(View v) {
         String key = DateFormat.getDateTimeInstance().format(new Date());
         //app.fireBaseReference.setValue(key); //pushing data to firebase
-        FireApp data = new FireApp(number1, number2);
-        app.fireBaseReference.child(key).setValue(data);
+//        FireApp data = new FireApp(number1);
+//        app.fireBaseReference.child(key).setValue(data);
     }
 
 

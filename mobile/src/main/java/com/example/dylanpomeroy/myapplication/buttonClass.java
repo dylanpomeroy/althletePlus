@@ -15,6 +15,7 @@ import android.widget.Button;
 public class buttonClass extends AppCompatActivity {
 
     Button historicalData;
+    Button graphData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +23,8 @@ public class buttonClass extends AppCompatActivity {
         setContentView(R.layout.date_layout);
 
         historicalData = (Button)findViewById(R.id.historicalData);
+        graphData = (Button)findViewById(R.id.graphData);
+
         historicalData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -30,6 +33,13 @@ public class buttonClass extends AppCompatActivity {
             }
         });
 
+        graphData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i2 = new Intent(buttonClass.this, HistoryGraph.class);
+                startActivity(i2);
+            }
+        });
 
     }
 }

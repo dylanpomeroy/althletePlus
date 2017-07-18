@@ -18,7 +18,14 @@
             </intent-filter>
         </activity>
         <activity android:name=".UserStory6Main">
-
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.dylanpomeroy.myapplication.buttonClass" />
+        </activity>
+        <activity android:name=".HistoryGraph">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.dylanpomeroy.myapplication.buttonClass" />
         </activity>
     </application>
 
