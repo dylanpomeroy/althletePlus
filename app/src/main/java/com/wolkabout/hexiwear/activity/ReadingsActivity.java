@@ -94,9 +94,6 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
     Toolbar toolbar;
 
     @ViewById
-    TextView connectionStatus;
-
-    @ViewById
     ProgressBar progressBar;
 
     @Bean
@@ -232,7 +229,6 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
     @Receiver(actions = BluetoothService.MODE_CHANGED, local = true)
     void onModeChanged(@Receiver.Extra final Mode mode) {
         this.mode = mode;
-        connectionStatus.setText(mode.getStringResource());
 
         if (mode == Mode.IDLE) {
             dialog.showInfo(R.string.readings_idle_mode, false);
@@ -305,13 +301,7 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
 
     @Receiver(actions = BluetoothService.ACTION_NEEDS_BOND, local = true)
     void onBondRequested() {
-        connectionStatus.setText(R.string.discovery_pairing);
         Snackbar.make(coordinator, R.string.discovery_pairing, Snackbar.LENGTH_LONG).show();
-    }
-
-    @Receiver(actions = BluetoothService.CONNECTION_STATE_CHANGED, local = true)
-    void onConnectionStateChanged(@Receiver.Extra final boolean connectionState) {
-        connectionStatus.setText(connectionState ? R.string.readings_connection_connected : R.string.readings_connection_reconnecting);
     }
 
     @Receiver(actions = BluetoothService.DATA_AVAILABLE, local = true)
