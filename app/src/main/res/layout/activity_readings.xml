@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".activity.ReadingsActivity">
+    tools:context=".activity.ReadingsActivity"
+    android:background="@color/secondary">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -14,20 +15,20 @@
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay">
+                  android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:background="?attr/colorPrimary"
+                    app:popupTheme="@style/AppTheme.PopupOverlay">
 
-            <ProgressBar
-                android:id="@+id/progressBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:indeterminate="true"
-                android:visibility="invisible"/>
-        </android.support.v7.widget.Toolbar>
+                    <ProgressBar
+                        android:id="@+id/progressBar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:indeterminate="true"
+                        android:visibility="invisible"/>
+                </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
 
@@ -46,32 +47,30 @@
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin">
 
-            <TextView
-                android:id="@+id/connectionStatus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="Connecting..."
-                android:textAppearance="?android:attr/textAppearanceMedium"/>
-
             <Button
                 android:id="@+id/btnPedometer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Pedometer" />
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:text="Pedometer"
+                android:textColor="@color/black" />
 
             <Button
                 android:id="@+id/btnHeartRate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Heartrate" />
+                android:layout_marginBottom="10dp"
+                android:text="Heartrate"
+                android:textColor="@color/black" />
 
             <Button
                 android:id="@+id/btnAlertAlthlete"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Alert Althlete" />
+                android:text="Alert Althlete"
+                android:textColor="@color/black" />
         </LinearLayout>
     </ScrollView>
 

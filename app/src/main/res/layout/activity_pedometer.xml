@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".activity.ReadingsActivity">
+    tools:context=".activity.ReadingsActivity"
+    android:background="@color/secondary">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -19,14 +20,6 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay">
-
-            <ProgressBar
-                android:id="@+id/progressBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:indeterminate="true"
-                android:visibility="invisible"/>
 
         </android.support.v7.widget.Toolbar>
 
@@ -61,39 +54,29 @@
                     android:text="Total Steps: 500"
                     android:textAlignment="center"
                     android:textSize="30sp"
-                    />
+                    android:textColor="@color/black"/>
 
                 <TextView
                     android:id="@+id/rangeSet"
                     android:layout_width="match_parent"
-                    android:layout_height="44dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
                     android:layout_marginTop="46dp"
-                    android:text="Set Range"
-                    android:textSize="24sp"
-                    />
-
-                <TextView
-                    android:id="@+id/text_high"
-                    android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginTop="0dp"
-                    android:text="Notify at"
+                    android:text="Notify Athlete At This Range:"
+                    android:textColor="@color/black"
                     android:textSize="24sp" />
 
                 <EditText
                     android:id="@+id/high_input"
                     android:layout_width="match_parent"
-                    android:layout_height="47dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
                     android:layout_marginRight="52dp"
                     android:layout_marginTop="0dp"
                     android:ems="10"
                     android:inputType="number"
-                    />
+                    android:textColor="@color/black" />
 
                 <Button
                     android:id="@+id/updateRange"
@@ -103,7 +86,7 @@
                     android:layout_marginLeft="0dp"
                     android:layout_marginRight="0dp"
                     android:text="Update Range"
-                    />
+                    android:textColor="@color/black" />
 
                 <Button
                     android:id="@+id/btnStepReset"
@@ -114,7 +97,7 @@
                     android:layout_marginRight="0dp"
                     android:onClick="reset"
                     android:text="Reset Steps"
-                    />
+                    android:textColor="@color/black" />
 
                 <Button
                     android:id="@+id/btnReturnToMain"
@@ -122,7 +105,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
                     android:text="Return to Main"
-                    />
+                    android:textColor="@color/black" />
 
             </LinearLayout>
         </LinearLayout>
