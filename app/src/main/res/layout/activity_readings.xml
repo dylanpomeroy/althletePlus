@@ -68,8 +68,17 @@
                 android:id="@+id/btnAlertAlthlete"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
                 android:layout_weight="1"
                 android:text="Alert Althlete"
+                android:textColor="@color/black" />
+
+            <Button
+                android:id="@+id/btnSyncData"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Sync Athlete Data with Cloud"
                 android:textColor="@color/black" />
         </LinearLayout>
     </ScrollView>
