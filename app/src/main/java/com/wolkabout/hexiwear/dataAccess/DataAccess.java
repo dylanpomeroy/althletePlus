@@ -1,5 +1,8 @@
 package com.wolkabout.hexiwear.dataAccess;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -12,6 +15,9 @@ import java.util.Map.Entry;
  */
 
 public class DataAccess implements IDataAccess {
+
+    private DatabaseReference firebaseReference;
+    private FirebaseDatabase firebaseDBInstance;
 
     private Date lastSynced;
 
@@ -37,6 +43,12 @@ public class DataAccess implements IDataAccess {
         for (Entry<ReadingType, DataAccessReading> daReading: allReadings.entrySet())
             readingsToPush.addAll(daReading.getValue().getReadings(lastSynced, null));
         lastSynced = newLastSynced;
+
+        for (Reading reading: readingsToPush){
+            firebaseReference.setValue(reading.type.toString());
+            firebaseReference.child(reading.type.toString()).setValue(reading.timestamp.toString());
+            firebaseReference.child(reading.type.toString()).child(reading.timestamp.toString()).setValue(reading.value);
+        }
 
         // pull firebase values and replace our old ones
         allReadings = null; // this will be some DA from firebase

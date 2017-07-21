@@ -80,6 +80,17 @@ public class Pedometer {
     }
 
     @Test
+    public void syncPedometerDataWithFirebase() throws Exception{
+        DataAccess dataAccess = new DataAccess();
+
+        dataAccess.addReading(new Reading(ReadingType.Steps, "5", new Date()));
+        dataAccess.addReading(new Reading(ReadingType.Steps, "10", new Date()));
+        dataAccess.addReading(new Reading(ReadingType.Steps, "15", new Date()));
+
+        dataAccess.syncWithFirebase();
+    }
+
+    @Test
     // For Acceptance Test 3.2
     public void readingUpdates() throws Exception{
         skipToPedometer();
