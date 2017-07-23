@@ -30,24 +30,25 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import static android.app.PendingIntent.getActivity;
 
 /**
- * Created by Owner on 2017-07-13.
+ * This class connects to FireBase and pulls the
+ * @author aqeb, Josh
  */
-
 public class HistoryGraph extends AppCompatActivity{
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference myRef;
     private AppData app;
-    String number1 = "4", number2 = "6";
-    Button click, click2;
-    TextView pullData;
+    Button click;
     String text;
-    Spinner spinner_1;
-    GraphView graph;// = (GraphView) findViewById(R.id.graph);
+    Spinner spinner_1, spinner_2;
+    GraphView graph;
     List<String> list = new ArrayList<>();
+    Intent intent = getIntent();
+    //String graphInfoType = intent.getStringExtra("graphInfoType");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +57,7 @@ public class HistoryGraph extends AppCompatActivity{
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         spinner_1 = (Spinner) findViewById(R.id.spinzy);
-        //pullData = (TextView) findViewById(R.id.sampletext);
+        spinner_2 = (Spinner) findViewById(R.id.spinzy2);
         app = ((AppData) getApplicationContext());
         click = (Button) findViewById(R.id.pushButton);
 
@@ -108,20 +109,14 @@ public class HistoryGraph extends AppCompatActivity{
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                graph.removeAllSeries();//reset graph
-                LineGraphSeries<DataPoint> series = new LineGraphSeries<>();
-
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     list.add(String.valueOf(ds.getKey()));
                     ArrayAdapter<String> myAdapter = new ArrayAdapter<String>(HistoryGraph.this, android.R.layout.simple_spinner_item, list);
                     spinner_1.setAdapter(myAdapter);
-
-                    /**
-                    * Do graph stuff here
-                    */
+                    spinner_2.setAdapter(myAdapter);
 
                 }
-                graph.addSeries(series);
+                spinner_2.setSelection(list.size()-1);
             }
 
             @Override
@@ -155,198 +150,99 @@ public class HistoryGraph extends AppCompatActivity{
     }
 
     /**
-     * obtains the data value and sets it to strings
+     * This function takes a DataSnapshot and creates a new instance of a DataSnapshot starting at
+     * the node described in the key parameter. The function loops through the new DataSnapshot and
+     * adds each key value and number field as a DataPoint to the LineGraphSeries object. The series
+     * is added to the graph and then the graph is give formatting.
      * @param dataSnapshot
      * @param key
      */
-    /*
     private void dataValue(DataSnapshot dataSnapshot, String key) {
 
-        for (DataSnapshot ds : dataSnapshot.getChildren()) { //gets data from firebase
-            FireApp uInfo = new FireApp();
-            SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy/MM/dd");
-            uInfo.setNumber1(ds.child(key).getValue(FireApp.class).getNumber1());
-            uInfo.setNumber2(ds.child(key).getValue(FireApp.class).getNumber2());
-            uInfo.setNumber3(ds.child(key).getValue(FireApp.class).getNumber3());
+        graph.removeAllSeries();
+        DataPoint[] points = new DataPoint[list.size()];
+        int pointCount = 0;
+        LineGraphSeries<DataPoint> series = new LineGraphSeries<>();
+        Date dateBegin = null;
+        Date dateEnd = null;
+        Date currSnapshotDate = null;
+        SimpleDateFormat originalFormat = new SimpleDateFormat("MMM dd, yyyy h:mm:ss a");
+        SimpleDateFormat targetFormat = new SimpleDateFormat("yyyy/MM/dd");
+        String upto = spinner_2.getSelectedItem().toString();
+        /*
+         *
+         * uncomment the next line and comment or remove the line after that when the functionality
+         * for sending a variable to this intent so that the datasnapshot goes to thr correct
+         * place in firebase
+         *
+         */
+        //DataSnapshot temp = dataSnapshot.child(graphInfoType);
+        DataSnapshot temp = dataSnapshot.child("Name");
 
+
+
+        //Converting the format for the selected dates from spinners
+        try {
+            dateBegin = originalFormat.parse(key);
+            dateEnd = originalFormat.parse(upto);
+        } catch(ParseException e) {}
+        String dateTargetFormat = targetFormat.format(dateBegin);
+        String dateTargetFormat2 = targetFormat.format(dateEnd);
+        try {
+            dateBegin = targetFormat.parse(dateTargetFormat);
+            dateEnd = targetFormat.parse(dateTargetFormat2);
+        } catch(ParseException e) {}
+
+
+        for (DataSnapshot ds : temp.getChildren()) { //gets data from firebase
+
+            FireApp uInfo = new FireApp();
+            uInfo.setNumber1(ds.getValue(FireApp.class).getNumber1());
+            uInfo.setNumber2(ds.getKey());
 
             int data1 = Integer.valueOf(uInfo.getNumber1());
-            int data2 = Integer.valueOf(uInfo.getNumber2());
-            int data3 = Integer.valueOf(uInfo.getNumber3());
-            //String data2 = String.valueOf(uInfo.getNumber2());
-            //String data3 = String.valueOf(uInfo.getNumber3());
-
-            Date date1 = null;
-            Date date2 = null;
-            Date date3 = null;
-            Date date4 = null;
 
             try {
-                //date1 = originalFormat.parse(data1);
-                date1 = originalFormat.parse("2000/01/23");
+                currSnapshotDate = originalFormat.parse(uInfo.getNumber2());
             } catch(ParseException e) {}
-            try {
-                //date2 = originalFormat.parse(data2);
-                date2 = originalFormat.parse("2000/01/24");
-            } catch(ParseException e) {}
-            try {
-                //date3 = originalFormat.parse(data3);
-                date3 = originalFormat.parse("2000/01/25");
-            } catch(ParseException e) {}
+
+            String formattedDate = targetFormat.format(currSnapshotDate);
 
             try {
-                //date3 = originalFormat.parse(data3);
-                date4 = originalFormat.parse("2000/01/26");
+                currSnapshotDate = targetFormat.parse(formattedDate);
             } catch(ParseException e) {}
 
-
-
-            //ArrayList<String> array = new ArrayList<>();
-            //array.add(data1);
-           // array.add(data2);
-
-//            pullData.setText(array.toString());
-
-
-           graph.removeAllSeries();
-
-            LineGraphSeries<DataPoint> series = new LineGraphSeries<>(new DataPoint[] {
-                    new DataPoint(date1, 1),
-                    new DataPoint(date2, 2),
-                    new DataPoint(date3, 3)
-                    //new DataPoint(data1, 1),
-                    //new DataPoint(data2, 2),
-                    //new DataPoint(data3, 3)
-                    //new DataPoint(3, 6)
-            });
-
-
-
-            //graph.addSeries(series);
-
+            if(dateBegin.getTime() <= dateEnd.getTime() && currSnapshotDate.getTime() >= dateBegin.getTime() && currSnapshotDate.getTime() <= dateEnd.getTime()){
+                points[pointCount] = new DataPoint(currSnapshotDate, data1);
+                series.appendData(points[pointCount], true, list.size());
+                pointCount ++;
+            }
+        }
+        if(pointCount > 0) {
+            graph.addSeries(series);
 
             // set date label formatter
-            //graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(app));
-            graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(getApplicationContext(), originalFormat));
-            graph.getGridLabelRenderer().setNumHorizontalLabels(3); // only 4 because of the space
+            graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(getApplicationContext(), targetFormat));
+            graph.getGridLabelRenderer().setNumHorizontalLabels(2);
+            graph.getGridLabelRenderer().setNumVerticalLabels(list.size());
 
-            // set manual x bounds to have nice steps
-            graph.getViewport().setMinX(date1.getTime());
-            graph.getViewport().setMaxX(date3.getTime());
+            graph.getViewport().setMinX(points[0].getX());
+            graph.getViewport().setMaxX(points[0].getX() + (86000000 * 3));
+
+            graph.getViewport().setMaxXAxisSize(86400000);
             graph.getViewport().setScalable(true);
             graph.getViewport().setScalableY(true);
             graph.getViewport().setScrollable(true);
             graph.getViewport().setScrollableY(true);
             graph.getViewport().setXAxisBoundsManual(true);
-
-            // as we use dates as labels, the human rounding to nice readable numbers
-            // is not necessary
-            //graph.getGridLabelRenderer().setHumanRounding(false);
-
-
+            graph.getViewport().setYAxisBoundsManual(true);
         }
-    }*/
-
-    private void dataValue(DataSnapshot dataSnapshot, String key) {
-        graph.removeAllSeries();
-        DataPoint[] points = new DataPoint[list.size()];
-        int pointCount = 0;
-        //SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy/MM/dd");
-        SimpleDateFormat originalFormat = new SimpleDateFormat("MMM dd, yyyy h:mm:ss a");
-        SimpleDateFormat targetFormat = new SimpleDateFormat("yyyy/MM/dd");
-          // 20120821
-
-        DataSnapshot temp = dataSnapshot.child("Name");
-
-
-        LineGraphSeries<DataPoint> series = new LineGraphSeries<>();
-        for (DataSnapshot ds : temp.getChildren()) { //gets data from firebase
-            FireApp uInfo = new FireApp();
-
-            int size = list.size();
-
-            uInfo.setNumber1(ds.getValue(FireApp.class).getNumber1());
-            uInfo.setNumber2(ds.getKey());
-            String t1 = uInfo.getNumber1();
-            String t2 = uInfo.getNumber2();
-            //uInfo.setNumber1(ds.child(key).getValue(FireApp.class).getNumber1());
-            //uInfo.setNumber2(ds.child(key).getValue(FireApp.class).getNumber2());
-
-
-            int data1 = Integer.valueOf(uInfo.getNumber1());
-
-            Date date1 = null;
-
-            try {
-                //date1 = originalFormat.parse(data1);
-                date1 = originalFormat.parse(uInfo.getNumber2());
-            } catch(ParseException e) {}
-            //String formattedDate = targetFormat.format(date1);
-            //Date1 = formattedDate.p
-
-            points[pointCount] = new DataPoint(date1, data1);
-            //points[pointCount] = new DataPoint(formattedDate, data1);
-
-
-            series.appendData(points[pointCount], false, list.size());
-            //series.appendData(points[pointCount], true, list.size());
-
-            pointCount ++;
-        }
-
-
-        /*for(int i = 0; i < 0; i++){
-            FireApp uInfo = new FireApp();
-
-            int size = list.size();
-            String teststring = list.get(i);
-            uInfo.setNumber1(temp.child(list.get(i)).getValue(FireApp.class).getNumber1());
-            //uInfo.setNumber1(dataSnapshot.child(list.get(i)).getValue(FireApp.class).getNumber1());
-            uInfo.setNumber2(list.get(i));
-            String t1 = uInfo.getNumber1();
-            String t2 = uInfo.getNumber2();
-            //uInfo.setNumber1(ds.child(key).getValue(FireApp.class).getNumber1());
-            //uInfo.setNumber2(ds.child(key).getValue(FireApp.class).getNumber2());
-
-
-            int data1 = Integer.valueOf(uInfo.getNumber1());
-
-            Date date1 = null;
-
-            try {
-                //date1 = originalFormat.parse(data1);
-                date1 = originalFormat.parse(uInfo.getNumber2());
-            } catch(ParseException e) {}
-            points[pointCount] = new DataPoint(date1, data1);
-
-            //series.appendData(points[pointCount], false, list.size());
-            series.appendData(points[pointCount], true, list.size());
-
-            pointCount ++;
-        }*/
-
-        graph.addSeries(series);
-
-        // set date label formatter
-        //graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(app));
-        graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(getApplicationContext(), originalFormat));
-        //graph.getGridLabelRenderer().setNumHorizontalLabels(list.size()/2); // was 3. only 4 because of the space
-        graph.getGridLabelRenderer().setNumVerticalLabels(list.size()/2);
-        graph.getGridLabelRenderer().setHorizontalLabelsAngle(90);
-
-
-        // set manual x bounds to have nice steps
-        //graph.getViewport().setMaxY(30);
-        graph.getViewport().setMinY(-1);
-        graph.getViewport().setMinX(points[0].getX());
-        graph.getViewport().setMaxX(points[list.size()-1].getX());
-        graph.getViewport().setScalable(true);
-        graph.getViewport().setScalableY(true);
-        graph.getViewport().setScrollable(true);
-        graph.getViewport().setScrollableY(true);
-        graph.getViewport().setXAxisBoundsManual(true);
     }
 
+    /**
+     *
+     *
+     */
     public void pullDataFromFire(){
         selection();
         myRef.addChildEventListener(new ChildEventListener() {
