@@ -95,6 +95,7 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-databind:2.7.5'
 
     compile 'com.google.firebase:firebase-database:10.2.6'
+    compile 'com.google.firebase:firebase-core:9.6.1'
 
     //debugCompile 'com.google.firebase:firebase-crash:10.0.1'
     //testing dependency
@@ -108,6 +109,8 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 }
+
+apply plugin: 'com.google.gms.google-services'
 
 /*apt {
     arguments {

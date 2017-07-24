@@ -10,18 +10,17 @@ import android.widget.TextView;
 import com.wolkabout.hexiwear.R;
 import com.wolkabout.hexiwear.activity.ReadingsActivity;
 import com.wolkabout.hexiwear.activity.ReadingsActivity_;
-import com.wolkabout.hexiwear.dataAccess.DataAccess;
-import com.wolkabout.hexiwear.dataAccess.ReadingType;
 import com.wolkabout.hexiwear.model.Characteristic;
 import com.wolkabout.hexiwear.model.Mode;
-import com.wolkabout.hexiwear.view.Reading;
 import com.wolkabout.hexiwear.view.SingleReading;
+import com.wolkabout.hexiwear.dataAccess.*;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -30,7 +29,7 @@ import java.util.Map;
 @EActivity(R.layout.activity_heartrate)
 public class HeartRateActivity extends Activity {
     static int rangeHigh,rangeLow;
-    private DataAccess dataAccess = new DataAccess();
+    private DataAccess dataAccess = new DataAccess(this);
     private boolean toastNotification = false;
     private boolean shouldCall = false;
 
@@ -53,6 +52,8 @@ public class HeartRateActivity extends Activity {
      */
     @AfterViews
     protected void setHeartRateVisibility() {
+        if (dataAccess.getCurrentReading(ReadingType.HeartRate) == null)
+            dataAccess.addReading(new Reading(ReadingType.HeartRate, "0 bpm", new Date()));
         int heartRate = Integer.parseInt(dataAccess.getCurrentReading(ReadingType.HeartRate).value.split(" ")[0]);
 
         TextView textView = (TextView) findViewById(R.id.text_heartRate);

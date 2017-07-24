@@ -23,6 +23,7 @@ package com.wolkabout.hexiwear.activity;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothDevice;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -42,6 +43,9 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.wolkabout.hexiwear.R;
 import com.wolkabout.hexiwear.dataAccess.DataAccess;
 import com.wolkabout.hexiwear.dataAccess.IDataAccess;
@@ -82,7 +86,9 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
 
     public static boolean skippingHexiConnection = false;
 
-    private DataAccess dataAccess = new DataAccess();
+    public static String username = "Demo";
+
+    private DataAccess dataAccess = new DataAccess(this);
 
     @Extra
     BluetoothDevice device;
@@ -182,15 +188,17 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
      * @param milliseconds
      */
     private void vibrateWatch(int milliseconds){
-        bluetoothService.queueNotification((byte) 2, notificationCount);
-        final Handler handler = new Handler();
-        for (int i = 0; i < milliseconds / 100; i++){
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run(){
-                    bluetoothService.queueNotification((byte) 2, notificationCount);
-                }
-            }, i * milliseconds / 10);
+        if (!skippingHexiConnection){
+            bluetoothService.queueNotification((byte) 2, notificationCount);
+            final Handler handler = new Handler();
+            for (int i = 0; i < milliseconds / 100; i++){
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run(){
+                        bluetoothService.queueNotification((byte) 2, notificationCount);
+                    }
+                }, i * milliseconds / 10);
+            }
         }
     }
 

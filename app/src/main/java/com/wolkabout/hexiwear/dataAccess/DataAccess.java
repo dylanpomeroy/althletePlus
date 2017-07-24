@@ -1,7 +1,11 @@
 package com.wolkabout.hexiwear.dataAccess;
 
+import android.content.Context;
+
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.wolkabout.hexiwear.activity.ReadingsActivity;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,24 +20,47 @@ import java.util.Map.Entry;
 
 public class DataAccess implements IDataAccess {
 
-    private DatabaseReference firebaseReference;
-    private FirebaseDatabase firebaseDBInstance;
 
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference firebaseReference;
     private Date lastSynced;
 
     private static Map<ReadingType, DataAccessReading> allReadings;
 
-    public DataAccess(){
-        if (allReadings == null) {
-            allReadings = new HashMap<>();
-            for (ReadingType type : ReadingType.values()) {
-                DataAccessReading dAR = new DataAccessReading();
-                dAR.addReading(new Reading(type, null, new Date()));
 
-                allReadings.put(type, dAR);
-            }
-            lastSynced = new Date(Long.MIN_VALUE);
+    /**
+     * Default constructor for data access. Uses previous lists for data if already initialized before.
+     * @param appContext the context of the activity. Used for Firebase initialization.
+     */
+    public DataAccess(Context appContext){
+        if (allReadings == null) initReadings();
+
+        FirebaseApp.initializeApp(appContext);
+
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        firebaseReference = firebaseDatabase.getReference("Althlete Plus");
+    }
+
+    /**
+     * Constructor used only by tests in order to add values. Cannot perform Firebase operations
+     */
+    public void initReadings(){
+        allReadings = new HashMap<>();
+        for (ReadingType type : ReadingType.values()) {
+            DataAccessReading dAR = new DataAccessReading();
+            //dAR.addReading(new Reading(type, null, new Date()));
+
+            allReadings.put(type, dAR);
         }
+        lastSynced = new Date(Long.MIN_VALUE);
+    }
+
+    /**
+     * Wipes all the data in Firebase under a given reading type for the current user
+     * @param readingType
+     */
+    public void wipeFirebaseData(ReadingType readingType){
+        firebaseReference.child(ReadingsActivity.username).setValue("");
     }
 
     public void syncWithFirebase(){
@@ -41,17 +68,15 @@ public class DataAccess implements IDataAccess {
         Date newLastSynced = new Date();
         List<Reading> readingsToPush = new ArrayList<>();
         for (Entry<ReadingType, DataAccessReading> daReading: allReadings.entrySet())
-            readingsToPush.addAll(daReading.getValue().getReadings(lastSynced, null));
+            readingsToPush.addAll(daReading.getValue().getReadings(lastSynced, new Date()));
         lastSynced = newLastSynced;
 
         for (Reading reading: readingsToPush){
-            firebaseReference.setValue(reading.type.toString());
-            firebaseReference.child(reading.type.toString()).setValue(reading.timestamp.toString());
-            firebaseReference.child(reading.type.toString()).child(reading.timestamp.toString()).setValue(reading.value);
+            firebaseReference.child(ReadingsActivity.username).child(reading.type.toString()).push().setValue(reading);
         }
 
-        // pull firebase values and replace our old ones
-        allReadings = null; // this will be some DA from firebase
+        // wipe our readings now that they exist in Firebase
+        initReadings();
     }
 
     public List<Reading> getReadings(ReadingType type, Date earliest, Date latest) {
