@@ -120,6 +120,11 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
 
     private int notificationCount = 0;
 
+    @Click(R.id.btnSyncData)
+    public void syncData(){
+        dataAccess.syncWithFirebase();
+    }
+
     /**
      * @param view
      */
