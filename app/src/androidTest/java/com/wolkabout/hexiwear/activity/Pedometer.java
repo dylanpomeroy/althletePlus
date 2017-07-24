@@ -29,6 +29,7 @@ import org.junit.runners.MethodSorters;
 import java.util.Date;
 
 import static android.support.test.InstrumentationRegistry.getTargetContext;
+import static android.support.test.espresso.Espresso.getIdlingResources;
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.clearText;
@@ -80,12 +81,30 @@ public class Pedometer {
     }
 
     @Test
+    public void syncPedometerDataWithFirebase() throws Exception{
+        ReadingsActivity.username = "Test";
+
+        // add data access readings to push to Firebase
+        DataAccess dataAccess = new DataAccess(mActivityRule.getActivity().getBaseContext());
+        dataAccess.addReading(new Reading(ReadingType.Steps, "5", new Date()));
+        dataAccess.addReading(new Reading(ReadingType.Steps, "10", new Date()));
+        dataAccess.addReading(new Reading(ReadingType.Steps, "15", new Date()));
+
+        // we stop here since we don't want to test on a race condition
+        // if everything works without throwing then this stuff should be in working order
+        dataAccess.syncWithFirebase();
+
+        // cleanup
+        dataAccess.wipeFirebaseData(ReadingType.Steps);
+    }
+
+    @Test
     // For Acceptance Test 3.2
     public void readingUpdates() throws Exception{
         skipToPedometer();
 
         // mock heart rate data
-        DataAccess dA = new DataAccess();
+        DataAccess dA = new DataAccess(mActivityRule.getActivity().getBaseContext());
         dA.addReading(new Reading(ReadingType.Steps, "123", new Date()));
 
         // wait for 1000 milliseconds... a crazy espresso way
@@ -100,11 +119,11 @@ public class Pedometer {
 
     @Test
     // For Acceptance Test 3.3
-    public void zoutOfRangeVibrate() throws Exception {
+    public void outOfRangeVibrate() throws Exception {
         skipToPedometer();
 
         // set upper range we will be exceeding
-        onView(withId(R.id.high_input)).perform(clearText(), typeText(String.valueOf("120")), closeSoftKeyboard());
+        onView(withId(R.id.threshold)).perform(clearText(), typeText(String.valueOf("120")), closeSoftKeyboard());
         onView(withId(R.id.updateRange)).perform(click());
 
 
@@ -112,7 +131,7 @@ public class Pedometer {
         //assertFalse(ReadingsActivity.vibrateHasBeenTriggered);
 
         // send in a mocked reading
-        DataAccess dataAccess = new DataAccess();
+        DataAccess dataAccess = new DataAccess(mActivityRule.getActivity().getBaseContext());
         dataAccess.addReading(new Reading(ReadingType.Steps, "123", new Date()));
 
         // wait 1000 milliseconds
@@ -128,18 +147,18 @@ public class Pedometer {
 
     @Test
     // For Acceptance Test 4.1
-    public void zoutOfRangeAlert() throws Exception {
+    public void outOfRangeAlert() throws Exception {
         skipToPedometer();
 
         // set upper range we will be exceeding
-        onView(withId(R.id.high_input)).perform(clearText(), typeText(String.valueOf("120")), closeSoftKeyboard());
+        onView(withId(R.id.threshold)).perform(clearText(), typeText(String.valueOf("120")), closeSoftKeyboard());
         onView(withId(R.id.updateRange)).perform(click());
 
         // assure that these are false initially
         //assertFalse(ReadingsActivity.notifyHasBeenTriggered);
 
         // send in a mocked reading
-        DataAccess dataAccess = new DataAccess();
+        DataAccess dataAccess = new DataAccess(mActivityRule.getActivity().getBaseContext());
         dataAccess.addReading(new Reading(ReadingType.Steps, "123", new Date()));
 
         // wait 1000 milliseconds
@@ -170,8 +189,8 @@ public class Pedometer {
         skipToPedometer();
         assertEquals(inPedo, true);
 
-        onView(withId(R.id.high_input)).perform(clearText(), typeText(String.valueOf("15")), closeSoftKeyboard());
-        onView(withId(R.id.high_input)).check(matches(withText("15")));
+        onView(withId(R.id.threshold)).perform(clearText(), typeText(String.valueOf("15")), closeSoftKeyboard());
+        onView(withId(R.id.threshold)).check(matches(withText("15")));
     }
 
     @Test
@@ -179,16 +198,16 @@ public class Pedometer {
         skipToPedometer();
         assertEquals(inPedo, true);
 
-        onView(withId(R.id.high_input)).perform(clearText(), typeText("15"), closeSoftKeyboard());
+        onView(withId(R.id.threshold)).perform(clearText(), typeText("15"), closeSoftKeyboard());
 
         onView(withId(R.id.updateRange)).perform(closeSoftKeyboard(), click());
 
-        onView(withId(R.id.high_input)).check(matches(withText("15")));
+        onView(withId(R.id.threshold)).check(matches(withText("15")));
 
     }
 
     @Test
-    public void zreset()throws Exception{
+    public void reset()throws Exception{
         skipToPedometer();
         assertEquals(inPedo, true);
 

@@ -7,19 +7,22 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.google.firebase.FirebaseApp;
 import com.wolkabout.hexiwear.R;
 import com.wolkabout.hexiwear.dataAccess.DataAccess;
 import com.wolkabout.hexiwear.dataAccess.ReadingType;
 import com.wolkabout.hexiwear.model.Characteristic;
 import com.wolkabout.hexiwear.model.Mode;
-import com.wolkabout.hexiwear.view.Reading;
 import com.wolkabout.hexiwear.view.SingleReading;
+import com.wolkabout.hexiwear.dataAccess.*;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -29,7 +32,7 @@ import java.util.Map;
 public class PedometerActivity extends Activity {
     public static int rangeHigh,rangeLow;
     public static int preSessionSteps = 0;
-    private DataAccess dataAccess = new DataAccess();
+    private DataAccess dataAccess = new DataAccess(this);
     private boolean toastNotification = false;
     private boolean shouldCall = false;
 
@@ -51,6 +54,9 @@ public class PedometerActivity extends Activity {
      */
     @AfterViews
     protected void setPedometerVisibility() {
+        if (dataAccess.getCurrentReading(ReadingType.Steps) == null){
+            dataAccess.addReading(new Reading(ReadingType.Steps, "0", new Date()));
+        }
         int totalSteps = Integer.parseInt(dataAccess.getCurrentReading(ReadingType.Steps).value.trim());
         int sessionSteps = totalSteps - preSessionSteps;
 

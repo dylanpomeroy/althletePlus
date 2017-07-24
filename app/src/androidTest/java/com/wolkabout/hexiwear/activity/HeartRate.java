@@ -45,8 +45,7 @@ public class HeartRate {
     public boolean inHeart = false;
 
     @Rule
-    public ActivityTestRule<MainActivity_> mActivityRule = new ActivityTestRule<>(
-            MainActivity_.class);
+    public ActivityTestRule<MainActivity_> mActivityRule = new ActivityTestRule<>(MainActivity_.class);
 
     @Test
     public void useAppContext() throws Exception {
@@ -75,7 +74,7 @@ public class HeartRate {
         skipToHeart();
 
         // mock heart rate data
-        DataAccess dA = new DataAccess();
+        DataAccess dA = new DataAccess(mActivityRule.getActivity().getBaseContext());
         dA.addReading(new Reading(ReadingType.HeartRate, "123", new Date()));
 
         // wait for 1000 milliseconds... a crazy espresso way
@@ -101,7 +100,7 @@ public class HeartRate {
         //assertFalse(ReadingsActivity.vibrateHasBeenTriggered);
 
         // send in a mocked reading
-        DataAccess dataAccess = new DataAccess();
+        DataAccess dataAccess = new DataAccess(mActivityRule.getActivity().getBaseContext());
         dataAccess.addReading(new Reading(ReadingType.HeartRate, "123", new Date()));
 
         // wait 1000 milliseconds
@@ -128,7 +127,7 @@ public class HeartRate {
         //assertFalse(ReadingsActivity.vibrateHasBeenTriggered);
 
         // send in a mocked reading
-        DataAccess dataAccess = new DataAccess();
+        DataAccess dataAccess = new DataAccess(mActivityRule.getActivity().getBaseContext());
         dataAccess.addReading(new Reading(ReadingType.HeartRate, "120", new Date()));
 
         // wait 1000 milliseconds
@@ -155,7 +154,7 @@ public class HeartRate {
         //assertFalse(ReadingsActivity.notifyHasBeenTriggered);
 
         // send in a mocked reading
-        DataAccess dataAccess = new DataAccess();
+        DataAccess dataAccess = new DataAccess(mActivityRule.getActivity().getBaseContext());
         dataAccess.addReading(new Reading(ReadingType.HeartRate, "123", new Date()));
 
         // wait 1000 milliseconds

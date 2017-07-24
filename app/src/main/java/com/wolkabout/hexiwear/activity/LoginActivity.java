@@ -84,6 +84,8 @@ public class LoginActivity extends AppCompatActivity {
             final String emailAddress = "elbert1212@gmail.com";
             final String password = "thisisthegrouppassword";
 
+            ReadingsActivity.username = emailAddress;
+
             final AuthenticationResponseDto response = authenticationService.signIn(new SignInDto(emailAddress, password));
             credentials.username().put(response.getEmail());
             credentials.accessToken().put(response.getAccessToken());
