@@ -130,7 +130,6 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
      */
     @Click(R.id.btnPedometer)
     public void switchToPedometer(View view) {
-        dataAccess.addReading(new Reading(ReadingType.Steps, "0", new Date()));
         Intent intent = new Intent(getBaseContext(), PedometerActivity_.class);
         startActivity(intent);
     }
@@ -140,8 +139,13 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
      */
     @Click(R.id.btnHeartRate)
     public void switchToHeartRate(View view) {
-        dataAccess.addReading(new Reading(ReadingType.HeartRate, "0", new Date()));
         Intent intent = new Intent(getBaseContext(), HeartRateActivity_.class);
+        startActivity(intent);
+    }
+
+    @Click(R.id.btnPerformanceHistory)
+    public void switchToPerformanceHistory(View view){
+        Intent intent = new Intent(getBaseContext(), PerformanceHistoryActivity_.class);
         startActivity(intent);
     }
 
