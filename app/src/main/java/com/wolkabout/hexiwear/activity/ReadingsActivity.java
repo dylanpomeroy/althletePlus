@@ -39,9 +39,11 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DatabaseReference;
@@ -214,9 +216,9 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
      */
     public void alertAlthlete(int milliseconds){
         // modify button appearance
-        final Button button = (Button)findViewById(R.id.btnAlertAlthlete);
-        button.setText("Alerting Althete...");
+        final ImageButton button = (ImageButton)findViewById(R.id.btnAlertAlthlete);
         button.setEnabled(false);
+        Toast.makeText(ReadingsActivity.this,"Alerting Athlete..", Toast.LENGTH_SHORT).show();
 
         vibrateWatch(milliseconds);
 
@@ -225,7 +227,6 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
         handler.postDelayed(new Runnable() {
             @Override
             public void run(){
-                button.setText("Alert Althlete");
                 button.setEnabled(true);
             }
         }, 2000);

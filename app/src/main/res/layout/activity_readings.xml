@@ -7,80 +7,160 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:context=".activity.ReadingsActivity"
-    android:background="@color/secondary">
+    android:background="@drawable/backgroundmin">
 
-    <android.support.design.widget.AppBarLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_height="match_parent">
 
-        <android.support.v7.widget.Toolbar
-                  android:id="@+id/toolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
-                    android:background="?attr/colorPrimary"
-                    app:popupTheme="@style/AppTheme.PopupOverlay">
 
-                    <ProgressBar
-                        android:id="@+id/progressBar"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="end"
-                        android:indeterminate="true"
-                        android:visibility="invisible"/>
-                </android.support.v7.widget.Toolbar>
+        <ImageButton
+            android:id="@+id/btnHeartRate"
+            android:layout_width="match_parent"
+            android:layout_height="125dp"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/textpedometer"
+            android:layout_marginTop="23dp"
+            android:background="@color/transparent"
+            android:padding="20dp"
+            android:scaleType="fitStart"
+            android:src="@drawable/heartrate"
+            android:textColor="@color/black" />
 
-    </android.support.design.widget.AppBarLayout>
 
-    <ScrollView
-        android:id="@+id/scrollView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        <ImageButton
+            android:id="@+id/btnSyncData"
+            android:layout_width="match_parent"
+            android:layout_height="117dp"
+            android:layout_marginBottom="45dp"
+            android:background="@color/transparent"
+            android:padding="20dp"
+            android:scaleType="fitStart"
+            android:src="@drawable/synccloud"
+            android:textColor="@color/black"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="8dp" />
 
-        <LinearLayout
+        <ImageButton
+            android:id="@+id/btnPedometer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin">
+            android:background="@color/transparent"
+            android:scaleType="fitStart"
+            android:src="@drawable/pedometer"
+            android:layout_below="@+id/hexlogo"
+            android:layout_alignStart="@+id/btnGraph" />
 
-            <Button
-                android:id="@+id/btnPedometer"
-                android:layout_width="match_parent"
+        <ImageButton
+            android:id="@+id/btnAlertAlthlete"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:background="@color/transparent"
+            android:scaleType="fitStart"
+            android:src="@drawable/alert"
+            android:textColor="@color/black"
+            android:layout_below="@+id/btnGraph"
+            android:layout_alignStart="@+id/btnSyncData"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="25dp"/>
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:background="@color/white"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
-                android:text="Pedometer"
-                android:textColor="@color/black" />
+                android:layout_gravity="end"
+                android:indeterminate="true"
+                android:visibility="invisible" />
+        </android.support.v7.widget.Toolbar>
 
-            <Button
-                android:id="@+id/btnHeartRate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:text="Heartrate"
-                android:textColor="@color/black" />
+        <ImageView
+            android:id="@+id/hexlogo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/toolbar"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            app:srcCompat="@drawable/hexlogo" />
 
-            <Button
-                android:id="@+id/btnAlertAlthlete"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_weight="1"
-                android:text="Alert Althlete"
-                android:textColor="@color/black" />
+        <TextView
+            android:id="@+id/textpedometer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/hexlogo"
+            android:layout_below="@+id/hexlogo"
+            android:layout_marginTop="21dp"
+            android:fontFamily="monospace"
+            android:text="Pedometer"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
-            <Button
-                android:id="@+id/btnSyncData"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Sync Athlete Data with Cloud"
-                android:textColor="@color/black" />
-        </LinearLayout>
-    </ScrollView>
+        <TextView
+            android:id="@+id/textheartrate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/textperformance"
+            android:layout_below="@+id/btnPedometer"
+            android:layout_marginTop="37dp"
+            android:fontFamily="monospace"
+            android:text="Heart-Rate"
+            android:textSize="20dp"
+            android:textStyle="bold" />
 
+        <TextView
+            android:id="@+id/textalert"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/textheartrate"
+            android:layout_alignTop="@+id/btnAlertAlthlete"
+            android:layout_marginTop="26dp"
+            android:fontFamily="monospace"
+            android:text="Alert Athlete"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textsync"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/textalert"
+            android:layout_alignTop="@+id/btnSyncData"
+            android:layout_marginTop="36dp"
+            android:fontFamily="monospace"
+            android:text="Sync with Cloud"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <ImageButton
+            android:id="@+id/btnGraph"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/transparent"
+            android:scaleType="fitStart"
+            app:srcCompat="@drawable/graphbutton"
+            android:layout_below="@+id/btnHeartRate"
+            android:layout_alignStart="@+id/btnAlertAlthlete" />
+
+        <TextView
+            android:id="@+id/textperformance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/hexlogo"
+            android:layout_alignTop="@+id/btnGraph"
+            android:layout_marginTop="25dp"
+            android:fontFamily="monospace"
+            android:text="Performance History"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>
