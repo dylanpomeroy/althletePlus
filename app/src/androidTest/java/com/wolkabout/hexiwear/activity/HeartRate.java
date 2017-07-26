@@ -47,6 +47,9 @@ public class HeartRate {
     @Rule
     public ActivityTestRule<MainActivity_> mActivityRule = new ActivityTestRule<>(MainActivity_.class);
 
+    /**
+     * primes the app for testing
+     */
     @Test
     public void useAppContext() throws Exception {
         // Context of the app under test.
@@ -55,6 +58,9 @@ public class HeartRate {
         assertEquals("com.wolkabout.hexiwear", appContext.getPackageName());
     }
 
+    /**
+     * opens up the heart rate activity
+     */
     @Test
     // For Acceptance Test 1.1
     public void skipToHeart() throws Exception{
@@ -68,6 +74,9 @@ public class HeartRate {
         inHeart = true;
     }
 
+    /**
+     * checks to see if new data is written to the activity
+     */
     @Test
     // For Acceptance Test 1.2
     public void readingUpdates() throws Exception {
@@ -87,6 +96,9 @@ public class HeartRate {
         Espresso.unregisterIdlingResources(idlingResource);
     }
 
+    /**
+     * tests to see if the hevice vibrates when it goes out of range.
+     */
     @Test
     // For Acceptance Test 10.1
     public void outOfRangeVibrate() throws Exception {
@@ -114,6 +126,9 @@ public class HeartRate {
         Espresso.unregisterIdlingResources(idlingResource);
     }
 
+    /**
+     * checks to makesure the device DOESN'T vibrate when in range.
+     */
     @Test
     // For Acceptance Test 10.2
     public void inRangeNoVibrate() throws Exception {
@@ -141,6 +156,9 @@ public class HeartRate {
         Espresso.unregisterIdlingResources(idlingResource);
     }
 
+    /**
+     * tests to see if an alert is sent when out of range
+     */
     @Test
     // For Acceptance Test 4.2
     public void outOfRangeAlert() throws Exception {
@@ -168,6 +186,9 @@ public class HeartRate {
         Espresso.unregisterIdlingResources(idlingResource);
     }
 
+    /**
+     * opens up the heart rate activity
+     */
     @Test
     public void pedometerButton()throws Exception{
         skipToHeart();
@@ -177,6 +198,9 @@ public class HeartRate {
         //onView(withId(R.id.container_current)).check(matches(withId(R.layout.activity_readings)));
     }
 
+    /**
+     * tests high range
+     */
     @Test
     public void checkHigh() throws Exception{
         skipToHeart();
@@ -185,6 +209,9 @@ public class HeartRate {
         onView(withId(R.id.high_input)).check(matches(withText("100")));
     }
 
+    /**
+     * tests low range
+     */
     @Test
     public void checkLow() throws Exception{
         skipToHeart();
@@ -194,6 +221,9 @@ public class HeartRate {
         onView(withId(R.id.low_input)).check(matches(withText("0")));
     }
 
+    /**
+     * tests both ranges
+     */
     @Test
     public void testRange() throws Exception{
         skipToHeart();

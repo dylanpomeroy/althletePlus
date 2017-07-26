@@ -60,6 +60,9 @@ public class Pedometer {
     public ActivityTestRule<MainActivity_> mActivityRule = new ActivityTestRule<>(
             MainActivity_.class);
 
+    /**
+     * lubes up for some test time
+     */
     @Test
     public void useAppContext() throws Exception {
         // Context of the app under test.
@@ -68,6 +71,9 @@ public class Pedometer {
         assertEquals("com.wolkabout.hexiwear", appContext.getPackageName());
     }
 
+    /**
+     * jumps to the pedo-meter.
+     */
     @Test
     // For Acceptance Test 3.1
     public void skipToPedometer() throws Exception{
@@ -80,6 +86,9 @@ public class Pedometer {
         inPedo = true;
     }
 
+    /**
+     * tests the firebase functionality of pedo-meter
+     */
     @Test
     public void syncPedometerDataWithFirebase() throws Exception{
         ReadingsActivity.username = "Test";
@@ -98,6 +107,9 @@ public class Pedometer {
         dataAccess.wipeFirebaseData(ReadingType.Steps);
     }
 
+    /**
+     * checks for the activity upading with new data.
+     */
     @Test
     // For Acceptance Test 3.2
     public void readingUpdates() throws Exception{
@@ -117,6 +129,9 @@ public class Pedometer {
         Espresso.unregisterIdlingResources(idlingResource);
     }
 
+    /**
+     * tests the out of range vibrate
+     */
     @Test
     // For Acceptance Test 3.3
     public void outOfRangeVibrate() throws Exception {
@@ -145,6 +160,9 @@ public class Pedometer {
         Espresso.unregisterIdlingResources(idlingResource);
     }
 
+    /**
+     * tests the out of range alert
+     */
     @Test
     // For Acceptance Test 4.1
     public void outOfRangeAlert() throws Exception {
@@ -175,6 +193,9 @@ public class Pedometer {
         //ReadingsActivity.notifyHasBeenTriggered = false;
     }
 
+    /**
+     * tests the update range button in the pedo-meter class
+     */
     @Test
     public void pedometerButton()throws Exception{
         skipToPedometer();
@@ -184,6 +205,9 @@ public class Pedometer {
         //intended(hasComponent(new ComponentName(getTargetContext(), ReadingsActivity.class)));
     }
 
+    /**
+     * checks the high range
+     */
     @Test
     public void checkHigh() throws Exception{
         skipToPedometer();
@@ -193,6 +217,9 @@ public class Pedometer {
         onView(withId(R.id.threshold)).check(matches(withText("15")));
     }
 
+    /**
+     * tests the whole range
+     */
     @Test
     public void testRange() throws Exception{
         skipToPedometer();
@@ -206,6 +233,9 @@ public class Pedometer {
 
     }
 
+    /**
+     * tests the reset step counter
+     */
     @Test
     public void reset()throws Exception{
         skipToPedometer();
