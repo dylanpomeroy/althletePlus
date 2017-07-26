@@ -37,6 +37,10 @@ import java.util.List;
  * Created by elber on 7/24/2017.
  */
 
+/**
+ * This class displays the heart rate or pedometer steps of any recorded time in the database
+ * @author Aqeb Josh
+ */
 @EActivity(R.layout.activity_historical_data_table)
 public class HistoricalDataTableActivity extends Activity {
     private FirebaseDatabase mFirebaseDatabase;
@@ -57,8 +61,10 @@ public class HistoricalDataTableActivity extends Activity {
     String currentReadingType;
 
     List<String> readingTypesList = new ArrayList<>();
-    List<Reading> readingsList = new ArrayList<>();
-    List<String> readingTimestamps = new ArrayList<>();
+    List<Reading> readingsList;
+    List<String> readingTimestamps;
+    String user = ReadingsActivity.username;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,13 +72,22 @@ public class HistoricalDataTableActivity extends Activity {
         setContentView(R.layout.activity_historical_data_table);
 
         FirebaseApp.initializeApp(this);
-
+        if(user.contains("@")){
+            user = user.substring(0, user.indexOf("@"));
+        }
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        myRef = mFirebaseDatabase.getReference("Althlete Plus/Test");
+        myRef = mFirebaseDatabase.getReference("Althlete Plus/"+user);
+
+
 
         getReadingTypes();
     }
 
+    /**
+     * This function gets the reading type and sends it to the other getReadings function to
+     * populate the date spinner
+     * @param view
+     */
     @Click(R.id.btnGetReadings)
     public void getReadings(View view){
         String readingType = readingTypesSpinner.getSelectedItem().toString();
@@ -80,6 +95,10 @@ public class HistoricalDataTableActivity extends Activity {
         getReadings(readingType);
     }
 
+    /**
+     * This function waits for the view data button to be clicked and the sets the text view
+     * @param view
+     */
     @Click(R.id.pushButton)
     public void pushButtonClicked(View view){
         String readingTimestamp = readingsSpinner.getSelectedItem().toString();
@@ -91,9 +110,15 @@ public class HistoricalDataTableActivity extends Activity {
         }
     }
 
+    /**
+     * populates the date spinner with every database item for the specified reading type
+     * @param readingType
+     */
     public void getReadings(String readingType){
-        myRef = mFirebaseDatabase.getReference("Althlete Plus/Test/"+readingType);
+        myRef = mFirebaseDatabase.getReference("Althlete Plus/"+user+"/"+readingType);
         Query q = myRef.orderByKey();
+        readingsList = new ArrayList<>();
+        readingTimestamps = new ArrayList<>();
 
         q.addValueEventListener(new ValueEventListener() {
             @Override

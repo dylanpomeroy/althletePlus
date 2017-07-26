@@ -34,6 +34,10 @@ import java.util.List;
  * Created by elber on 7/24/2017.
  */
 
+/**
+ * This class displays a graph of all data for a specified reading type
+ * @author Aqeb Josh
+ */
 @EActivity(R.layout.activity_historical_data_graph)
 public class HistoricalDataGraphActivity extends Activity {
     @ViewById(R.id.spnReadingTypes)
@@ -46,7 +50,10 @@ public class HistoricalDataGraphActivity extends Activity {
     private DatabaseReference myRef;
 
     List<String> readingTypesList = new ArrayList<>();
-    List<Reading> readingsList = new ArrayList<>();
+    List<Reading> readingsList;
+
+    double maxY = 0.0;
+    String user = ReadingsActivity.username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -54,30 +61,42 @@ public class HistoricalDataGraphActivity extends Activity {
         setContentView(R.layout.activity_historical_data_graph);
 
         FirebaseApp.initializeApp(this);
-
+        if(user.contains("@")){
+            user = user.substring(0, user.indexOf("@"));
+        }
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        myRef = mFirebaseDatabase.getReference("Althlete Plus/Test");
+        myRef = mFirebaseDatabase.getReference("Althlete Plus/"+user);//Test
 
         getReadingTypes();
     }
 
+    /**
+     * populates the graph with the contents of the readingsList
+     */
     public void populateGraph(){
         graph.removeAllSeries();
         LineGraphSeries<DataPoint> series = new LineGraphSeries<>();
 
         for (Reading reading : readingsList){
-            DataPoint dp = new DataPoint(reading.timestamp, Double.parseDouble(reading.value));
+            String temp = reading.value;
+            if(temp.contains(" ")){
+                temp = temp.substring(0, temp.indexOf(" "));
+            }
+            if(Double.parseDouble(temp) > maxY)
+                maxY = Double.parseDouble(temp);
+            DataPoint dp = new DataPoint(reading.timestamp, Double.parseDouble(temp));
             series.appendData(dp, true, readingsList.size());
         }
 
         graph.addSeries(series);
 
-        graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(getApplicationContext(), new SimpleDateFormat("HH:mm:ss Z")));
+        graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(getApplicationContext(), new SimpleDateFormat("HH:mm:ss")));
         graph.getGridLabelRenderer().setNumHorizontalLabels(3);
         graph.getGridLabelRenderer().setNumVerticalLabels(5);
 
         graph.getViewport().setMinX(0);
         graph.getViewport().setMaxX(86000000 * 3);
+        graph.getViewport().setMaxY(maxY+1);
 
         graph.getViewport().setMaxXAxisSize(86400000);
         graph.getViewport().setScalable(true);
@@ -110,10 +129,17 @@ public class HistoricalDataGraphActivity extends Activity {
         });
     }
 
+    /**
+     * This function gets the readings based on the reading type and places them in the
+     * readingsList
+     */
     @Click(R.id.pushButton)
     public void getReadings(){
+        maxY = 0.0;
+        readingsList = new ArrayList<>();
+
         String readingType = readingTypesSpinner.getSelectedItem().toString();
-        myRef = mFirebaseDatabase.getReference("Althlete Plus/Test/"+readingType);
+        myRef = mFirebaseDatabase.getReference("Althlete Plus/"+user+"/"+readingType);//Test
         Query q = myRef.orderByKey();
 
         q.addValueEventListener(new ValueEventListener() {
