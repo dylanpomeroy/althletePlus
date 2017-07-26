@@ -86,16 +86,16 @@ public class Pedometer {
 
         // add data access readings to push to Firebase
         DataAccess dataAccess = new DataAccess(mActivityRule.getActivity().getBaseContext());
-        dataAccess.addReading(new Reading(ReadingType.Steps, "5", new Date()));
-        dataAccess.addReading(new Reading(ReadingType.Steps, "10", new Date()));
-        dataAccess.addReading(new Reading(ReadingType.Steps, "15", new Date()));
+        dataAccess.addReading(new Reading(ReadingType.HeartRate, "500", new Date()));
+        //dataAccess.addReading(new Reading(ReadingType.HeartRate, "1000", new Date()));
+        //dataAccess.addReading(new Reading(ReadingType.HeartRate, "1500", new Date()));
 
         // we stop here since we don't want to test on a race condition
         // if everything works without throwing then this stuff should be in working order
         dataAccess.syncWithFirebase();
 
         // cleanup
-        dataAccess.wipeFirebaseData(ReadingType.Steps);
+        //dataAccess.wipeFirebaseData(ReadingType.Steps);
     }
 
     @Test

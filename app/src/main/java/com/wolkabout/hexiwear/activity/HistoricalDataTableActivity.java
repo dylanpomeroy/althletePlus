@@ -21,8 +21,10 @@ import com.wolkabout.hexiwear.R;
 import com.wolkabout.hexiwear.dataAccess.AppData;
 import com.wolkabout.hexiwear.dataAccess.DataAccess;
 import com.wolkabout.hexiwear.dataAccess.FireApp;
+import com.wolkabout.hexiwear.dataAccess.Reading;
 import com.wolkabout.hexiwear.dataAccess.ReadingType;
 
+import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
@@ -46,93 +48,89 @@ public class HistoricalDataTableActivity extends Activity {
     @ViewById(R.id.sampletext)
     TextView pullData;
 
-    @ViewById(R.id.spinzy)
-    Spinner spinner_1;
+    @ViewById(R.id.spnReadingTypes)
+    Spinner readingTypesSpinner;
 
-    String text;
+    @ViewById(R.id.spnReadings)
+    Spinner readingsSpinner;
 
-    List<String> list = new ArrayList<>();
+    List<String> readingTypesList = new ArrayList<>();
+    List<Reading> readingsList = new ArrayList<>();
+    List<String> readingTimestamps = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_historical_data_table);
+        setContentView(R.layout.activity_historical_data_table);
 
         FirebaseApp.initializeApp(this);
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        myRef = mFirebaseDatabase.getReference("Althlete Plus");
+        String user = "Test";
+        myRef = mFirebaseDatabase.getReference("Althlete Plus/"+user);
 
-        showData();
+        getReadingTypes();
+    }
 
-        //pullDataFromFire();
+    @Click(R.id.btnGetReadings)
+    public void getReadings(View view){
+        String readingType = readingTypesSpinner.getSelectedItem().toString();
 
-//        click.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                myRef.addValueEventListener(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(DataSnapshot dataSnapshot) {
-//                        dataValue(dataSnapshot, selection());
-//                    }
-//                    @Override
-//                    public void onCancelled(DatabaseError databaseError) {
-//                    }
-//                });
-//            }
-//        });
+        getReadings(readingType);
+    }
 
+    @Click(R.id.pushButton)
+    public void pushButtonClicked(View view){
+        String readingTimestamp = readingsSpinner.getSelectedItem().toString();
+
+        for (Reading reading : readingsList){
+            if (reading.timestamp.toString().equals(readingTimestamp)){
+                pullData.setText(reading.value);
+            }
+        }
+    }
+
+    public void getReadings(String readingType){
+        myRef = mFirebaseDatabase.getReference("Althlete Plus/Test/"+readingType);
+        Query q = myRef.orderByKey();
+
+        q.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+
+                    Reading reading = ds.getValue(Reading.class);
+                    readingsList.add(reading);
+                    readingTimestamps.add(reading.timestamp.toString());
+                    ArrayAdapter<String> myAdapter = new ArrayAdapter<>(HistoricalDataTableActivity.this, android.R.layout.simple_spinner_item, readingTimestamps);
+                    readingsSpinner.setAdapter(myAdapter);
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
     }
 
     /**
      * displays the firebase data in the spinner
      */
-    public void showData() {
+    public void getReadingTypes() {
         Query q = myRef.orderByKey();
-
-        DataAccess dataAccess = new DataAccess(this);
-        dataAccess.getFirebaseReadings(ReadingType.Steps);
 
         q.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
-
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    list.add(String.valueOf(ds.getKey()));
-                    ArrayAdapter<String> myAdapter = new ArrayAdapter<>(HistoricalDataTableActivity.this, android.R.layout.simple_spinner_item, list);
-                    spinner_1.setAdapter(myAdapter);
+                    readingTypesList.add(String.valueOf(ds.getKey()));
+                    ArrayAdapter<String> myAdapter = new ArrayAdapter<>(HistoricalDataTableActivity.this, android.R.layout.simple_spinner_item, readingTypesList);
+                    readingTypesSpinner.setAdapter(myAdapter);
                 }
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
-            }
-
-        });
-    }
-
-    /**
-     *
-     * @return spinner selection
-     */
-    public String selection() {
-        spinner_1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                text = parent.getItemAtPosition(position).toString();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
-        return text;
     }
 
     /**
@@ -155,37 +153,5 @@ public class HistoricalDataTableActivity extends Activity {
 
             pullData.setText(array.toString());
         }
-    }
-
-
-    /**
-     *     pulling data from Firebase
-     */
-    public void pullDataFromFire(){
-        //selection();
-        myRef.addChildEventListener(new ChildEventListener() {
-
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                showData();
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
     }
 }

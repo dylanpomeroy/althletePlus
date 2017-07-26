@@ -108,6 +108,8 @@ dependencies {
     androidTestCompile("com.android.support.test.espresso:espresso-intents:2.2.2", {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+
+    compile 'com.jjoe64:graphview:4.2.1'
 }
 
 apply plugin: 'com.google.gms.google-services'

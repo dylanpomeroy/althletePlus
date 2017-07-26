@@ -51,7 +51,6 @@ public class DataAccess implements IDataAccess {
         allReadings = new HashMap<>();
         for (ReadingType type : ReadingType.values()) {
             DataAccessReading dAR = new DataAccessReading();
-            //dAR.addReading(new Reading(type, null, new Date()));
 
             allReadings.put(type, dAR);
         }
