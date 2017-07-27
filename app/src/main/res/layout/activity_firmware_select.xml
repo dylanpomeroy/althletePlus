@@ -31,6 +31,6 @@
         android:divider="@color/primary"
         android:dividerHeight="1dp"
         android:padding="8dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 </android.support.design.widget.CoordinatorLayout>
