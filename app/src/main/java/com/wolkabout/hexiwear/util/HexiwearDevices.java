@@ -163,8 +163,8 @@ public class HexiwearDevices {
     }
 
     public void toggleTracking(final BluetoothDevice device) {
-        final boolean isTracking = shouldTransmit(device);
-        preferences.edit().putBoolean(device.getAddress() + SHOULD_TRANSMIT_SUFFIX, !isTracking).apply();
+        //final boolean isTracking = shouldTransmit(device);
+        //preferences.edit().putBoolean(device.getAddress() + SHOULD_TRANSMIT_SUFFIX, !isTracking).apply();
     }
 
     public void toggleTracking(final HexiwearDevice device) {

@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "512218752968",
+    "firebase_url": "https://test-e1e35.firebaseio.com",
+    "project_id": "test-e1e35",
+    "storage_bucket": "test-e1e35.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:512218752968:android:8320cb32963f24bc",
+        "android_client_info": {
+          "package_name": "com.wolkabout.hexiwear"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "512218752968-pkpsplen2k06d5aa274t1flhta1lcfln.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.dylanpomeroy.myapplication",
+            "certificate_hash": "2601b25bdfec0e0d30ddfc8768501fb3247dcb8d"
+          }
+        },
+        {
+          "client_id": "512218752968-snl4riaq6m7a6b0u2c8mhm5s6pd2prlj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApqPIX172LdbejAjGirGXtKAih1Qk_Pys"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "512218752968-snl4riaq6m7a6b0u2c8mhm5s6pd2prlj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

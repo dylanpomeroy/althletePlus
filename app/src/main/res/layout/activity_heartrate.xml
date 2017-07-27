@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".activity.ReadingsActivity">
+    tools:context=".activity.ReadingsActivity"
+    android:background="@drawable/backgroundmin">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -17,16 +18,19 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/white"
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
-            <ProgressBar
-                android:id="@+id/progressBar"
+            <TextView
+                android:id="@+id/toolbar_title_heart"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:indeterminate="true"
-                android:visibility="invisible"/>
+                android:layout_gravity="center"
+                android:fontFamily="monospace"
+                android:text="Heart Rate"
+                android:textColor="@android:color/black"
+                android:textSize="30sp"
+                android:textStyle="bold" />
 
         </android.support.v7.widget.Toolbar>
 
@@ -56,83 +60,86 @@
                 <TextView
                     android:id="@+id/text_heartRate"
                     android:layout_width="match_parent"
-                    android:layout_height="46dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
+                    android:fontFamily="monospace"
                     android:text="Heartrate: 30"
                     android:textAlignment="center"
-                    android:textSize="30sp"
-                    />
+                    android:textColor="@color/black"
+                    android:textSize="30sp" />
 
                 <TextView
                     android:id="@+id/rangeSet"
                     android:layout_width="match_parent"
-                    android:layout_height="44dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
                     android:layout_marginTop="46dp"
-                    android:text="Set Range"
-                    android:textSize="24sp"
-                    />
+                    android:text="Set Target Heartrate Range:"
+                    android:textColor="@color/black"
+                    android:textSize="24sp" />
 
                 <TextView
                     android:id="@+id/text_high"
                     android:layout_width="match_parent"
-                    android:layout_height="56dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
                     android:layout_marginTop="0dp"
                     android:text="High"
-                    android:textSize="24sp"
-                    />
+                    android:textColor="@color/black"
+                    android:textSize="24sp" />
 
                 <EditText
                     android:id="@+id/high_input"
                     android:layout_width="match_parent"
-                    android:layout_height="47dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
                     android:layout_marginRight="52dp"
                     android:layout_marginTop="0dp"
                     android:ems="10"
                     android:inputType="number"
-                    />
+                    android:textColor="@color/black" />
 
                 <TextView
                     android:id="@+id/text_low"
                     android:layout_width="match_parent"
-                    android:layout_height="56dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
                     android:layout_marginTop="0dp"
                     android:text="Low"
-                    android:textSize="24sp"
-                    />
+                    android:textColor="@color/black"
+                    android:textSize="24sp" />
 
                 <EditText
                     android:id="@+id/low_input"
                     android:layout_width="match_parent"
-                    android:layout_height="47dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginRight="52dp"
                     android:layout_marginTop="25dp"
                     android:ems="10"
                     android:inputType="number"
-                    />
+                    android:textColor="@color/black" />
 
                 <Button
                     android:id="@+id/updateRange"
+                    style="@style/Widget.AppCompat.Button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
                     android:layout_marginLeft="0dp"
                     android:layout_marginRight="0dp"
                     android:text="Update Range"
-                    />
+                    android:textColor="@color/black" />
 
                 <Button
                     android:id="@+id/returnToMain"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    android:text="Return to Main" />
+                    android:text="Return to Main"
+                    android:textColor="@color/black" />
 
             </LinearLayout>
         </LinearLayout>

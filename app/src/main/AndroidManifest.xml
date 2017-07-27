@@ -72,6 +72,24 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".activity.PerformanceHistoryActivity_"
+            android:label="Performance History"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.HistoricalDataTableActivity_"
+            android:label="Historical Data Table"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.HistoricalDataGraphActivity_"
+            android:label="Historical Data Graph"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".activity.SettingsActivity_"
             android:label="@string/preferences_activity_title"
             android:parentActivityName=".activity.ReadingsActivity_"

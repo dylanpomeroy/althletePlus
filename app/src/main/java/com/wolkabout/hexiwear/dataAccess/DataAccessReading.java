@@ -24,12 +24,18 @@ public class DataAccessReading implements IDataAccessReading {
     }
 
     public Reading getCurrentReading() {
+        if (readings.size() == 0){
+            return null;
+        }
+
         return readings.get(readings.size() - 1);
     }
 
-    public List<Reading> getReadings(final Date earliest, Date latest) {
+    public List<Reading> getReadings(Date earliest, Date latest) {
         List<Reading> results = new ArrayList<>();
 
+        if (earliest == null) earliest = new Date(Long.MIN_VALUE);
+        if (latest == null) latest = new Date(Long.MAX_VALUE);
         for (Reading reading: readings)
             if (!reading.timestamp.before(earliest) && !reading.timestamp.after(latest))
                 results.add(reading);

@@ -23,6 +23,7 @@ package com.wolkabout.hexiwear.activity;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothDevice;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -38,10 +39,15 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.wolkabout.hexiwear.R;
 import com.wolkabout.hexiwear.dataAccess.DataAccess;
 import com.wolkabout.hexiwear.dataAccess.IDataAccess;
@@ -82,7 +88,9 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
 
     public static boolean skippingHexiConnection = false;
 
-    private DataAccess dataAccess = new DataAccess();
+    public static String username = "Demo";
+
+    private DataAccess dataAccess = new DataAccess(this);
 
     @Extra
     BluetoothDevice device;
@@ -92,9 +100,6 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
 
     @ViewById
     Toolbar toolbar;
-
-    @ViewById
-    TextView connectionStatus;
 
     @ViewById
     ProgressBar progressBar;
@@ -117,17 +122,32 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
 
     private int notificationCount = 0;
 
+    @Click(R.id.btnSyncData)
+    public void syncData(){
+        dataAccess.syncWithFirebase();
+    }
+
+    /**
+     * @param view
+     */
     @Click(R.id.btnPedometer)
     public void switchToPedometer(View view) {
-        dataAccess.addReading(new Reading(ReadingType.Steps, "0", new Date()));
         Intent intent = new Intent(getBaseContext(), PedometerActivity_.class);
         startActivity(intent);
     }
 
+    /**
+     * @param view
+     */
     @Click(R.id.btnHeartRate)
     public void switchToHeartRate(View view) {
-        dataAccess.addReading(new Reading(ReadingType.HeartRate, "0", new Date()));
         Intent intent = new Intent(getBaseContext(), HeartRateActivity_.class);
+        startActivity(intent);
+    }
+
+    @Click(R.id.btnPerformanceHistory)
+    public void switchToPerformanceHistory(View view){
+        Intent intent = new Intent(getBaseContext(), PerformanceHistoryActivity_.class);
         startActivity(intent);
     }
 
@@ -139,15 +159,29 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
     // To vibrate watch:
     //  set shouldVibrate to true
     //  optionally set vibrateDuration value in milliseconds
+    public static boolean notifyHasBeenTriggered = false;
+    public static boolean vibrateHasBeenTriggered = false;
     private static int vibrateDurationDefault = 1000;
     public static boolean shouldVibrate = false;
+    public static boolean shouldNotify = false;
+    public static String notifyText;
     public static int vibrateDuration = vibrateDurationDefault;
+
+    /**
+     * checks to see if the heart or pedo have requested any notifications, is recalled once a second
+     */
     @AfterViews
     public void checkForRequests(){
         if (shouldVibrate){
+            vibrateHasBeenTriggered = true;
             shouldVibrate = false;
             vibrateWatch(vibrateDuration);
             vibrateDuration = vibrateDurationDefault;
+        }
+        if (shouldNotify) {
+            notifyHasBeenTriggered = true;
+            dialog.shortToast(notifyText);
+            shouldNotify = false;
         }
 
         // re-call this method in 200ms
@@ -156,28 +190,39 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
             public void run(){
                 checkForRequests();
             }
-        }, 200);
+        }, 1000);
     }
 
+    /**
+     * vibrates the watch for an interval taken as param
+     *
+     * @param milliseconds
+     */
     private void vibrateWatch(int milliseconds){
-        bluetoothService.queueNotification((byte) 2, notificationCount);
-        final Handler handler = new Handler();
-        for (int i = 0; i < milliseconds / 100; i++){
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run(){
-                    bluetoothService.queueNotification((byte) 2, notificationCount);
-                }
-            }, i * milliseconds / 10);
+        if (!skippingHexiConnection){
+            bluetoothService.queueNotification((byte) 2, notificationCount);
+            final Handler handler = new Handler();
+            for (int i = 0; i < milliseconds / 100; i++){
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run(){
+                        bluetoothService.queueNotification((byte) 2, notificationCount);
+                    }
+                }, i * milliseconds / 10);
+            }
         }
     }
 
+    /**
+     * used to alert the athelete via vibration
+     *
+     * @param milliseconds
+     */
     public void alertAlthlete(int milliseconds){
         // modify button appearance
-        final Button button = (Button)findViewById(R.id.btnAlertAlthlete);
-        button.setBackgroundColor(Color.YELLOW);
-        button.setText("Alerting Althete...");
+        final ImageButton button = (ImageButton)findViewById(R.id.btnAlertAlthlete);
         button.setEnabled(false);
+        Toast.makeText(ReadingsActivity.this,"Alerting Athlete...", Toast.LENGTH_SHORT).show();
 
         vibrateWatch(milliseconds);
 
@@ -186,8 +231,6 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
         handler.postDelayed(new Runnable() {
             @Override
             public void run(){
-                button.setBackgroundResource(android.R.drawable.btn_default);
-                button.setText("Alert Althlete");
                 button.setEnabled(true);
             }
         }, 2000);
@@ -211,9 +254,9 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
     void setViews() {
         toolbar.setTitle(hexiwearDevice.getWolkName());
         setSupportActionBar(toolbar);
-        progressBar.setVisibility(View.VISIBLE);
+        if (!skippingHexiConnection)
+            progressBar.setVisibility(View.VISIBLE);
     }
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -224,7 +267,6 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
     @Receiver(actions = BluetoothService.MODE_CHANGED, local = true)
     void onModeChanged(@Receiver.Extra final Mode mode) {
         this.mode = mode;
-        connectionStatus.setText(mode.getStringResource());
 
         if (mode == Mode.IDLE) {
             dialog.showInfo(R.string.readings_idle_mode, false);
@@ -297,13 +339,7 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
 
     @Receiver(actions = BluetoothService.ACTION_NEEDS_BOND, local = true)
     void onBondRequested() {
-        connectionStatus.setText(R.string.discovery_pairing);
         Snackbar.make(coordinator, R.string.discovery_pairing, Snackbar.LENGTH_LONG).show();
-    }
-
-    @Receiver(actions = BluetoothService.CONNECTION_STATE_CHANGED, local = true)
-    void onConnectionStateChanged(@Receiver.Extra final boolean connectionState) {
-        connectionStatus.setText(connectionState ? R.string.readings_connection_connected : R.string.readings_connection_reconnecting);
     }
 
     @Receiver(actions = BluetoothService.DATA_AVAILABLE, local = true)
@@ -373,6 +409,7 @@ public class ReadingsActivity extends AppCompatActivity implements ServiceConnec
         final boolean shouldTransmit = hexiwearDevices.shouldTransmit(device);
         final int icon = shouldTransmit ? R.drawable.ic_cloud_queue_white_48dp : R.drawable.ic_cloud_off_white_48dp;
         menu.getItem(0).setIcon(icon);
+        menu.getItem(0).setVisible(false);
         return super.onPrepareOptionsMenu(menu);
     }
 

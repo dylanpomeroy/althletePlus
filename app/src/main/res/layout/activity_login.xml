@@ -1,24 +1,39 @@
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/primary"
+    android:background="@drawable/backgroundmin"
     android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".activity.LoginActivity">
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitCenter"
+        app:srcCompat="@drawable/hexlogo"
+        android:layout_marginBottom="109dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true" />
+
     <Button
         android:id="@+id/signInButton"
         style="@style/Base.Widget.AppCompat.Button.Borderless"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="253dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
         android:layout_gravity="end"
-        android:layout_marginTop="@dimen/min_margin"
+        android:fontFamily="casual"
         android:gravity="center"
-        android:text="Welcome to the Future."
-        android:textColor="@color/white" />
-</LinearLayout>
+        android:text="A Flavor by Eh Plus"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+</RelativeLayout>
