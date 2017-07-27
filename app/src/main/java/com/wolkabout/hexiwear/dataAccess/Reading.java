@@ -11,6 +11,8 @@ public class Reading {
     public String value;
     public Date timestamp;
 
+    public Reading(){}
+
     public Reading(ReadingType type, String value, Date timestamp){
         this.type = type;
         this.value = value;

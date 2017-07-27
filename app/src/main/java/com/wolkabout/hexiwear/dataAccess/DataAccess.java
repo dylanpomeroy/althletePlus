@@ -3,8 +3,11 @@ package com.wolkabout.hexiwear.dataAccess;
 import android.content.Context;
 
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.wolkabout.hexiwear.activity.ReadingsActivity;
 
 import java.util.ArrayList;
@@ -48,7 +51,6 @@ public class DataAccess implements IDataAccess {
         allReadings = new HashMap<>();
         for (ReadingType type : ReadingType.values()) {
             DataAccessReading dAR = new DataAccessReading();
-            //dAR.addReading(new Reading(type, null, new Date()));
 
             allReadings.put(type, dAR);
         }
@@ -63,6 +65,33 @@ public class DataAccess implements IDataAccess {
         firebaseReference.child(ReadingsActivity.username).setValue("");
     }
 
+    public void getFirebaseReadings(ReadingType readingType){
+        final List<Reading> theseReadings = new ArrayList<>();
+
+        ValueEventListener readingListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Reading reading = dataSnapshot.getValue(Reading.class);
+                theseReadings.add(reading);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                int i = 1;
+            }
+        };
+
+        DatabaseReference readingReference = FirebaseDatabase.getInstance().getReference().child("Test").child(ReadingType.Steps.toString());
+        readingReference.addListenerForSingleValueEvent(readingListener);
+
+
+
+        int j = 1;
+    }
+
+    /**
+     * Adds all the data in data access to firebase then wipes the local data
+     */
     public void syncWithFirebase(){
         // push values to firebase
         Date newLastSynced = new Date();
@@ -72,7 +101,7 @@ public class DataAccess implements IDataAccess {
         lastSynced = newLastSynced;
 
         for (Reading reading: readingsToPush){
-            firebaseReference.child(ReadingsActivity.username).child(reading.type.toString()).push().setValue(reading);
+            firebaseReference.child(ReadingsActivity.username.split("@")[0]).child(reading.type.toString()).push().setValue(reading);
         }
 
         // wipe our readings now that they exist in Firebase

@@ -12,8 +12,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-
+      
         <ImageButton
             android:id="@+id/btnHeartRate"
             android:layout_width="match_parent"
@@ -26,7 +25,6 @@
             android:scaleType="fitStart"
             android:src="@drawable/heartrate"
             android:textColor="@color/black" />
-
 
         <ImageButton
             android:id="@+id/btnSyncData"
@@ -50,7 +48,7 @@
             android:scaleType="fitStart"
             android:src="@drawable/pedometer"
             android:layout_below="@+id/hexlogo"
-            android:layout_alignStart="@+id/btnGraph" />
+            android:layout_alignStart="@+id/btnPerformanceHistory" />
 
         <ImageButton
             android:id="@+id/btnAlertAlthlete"
@@ -60,7 +58,7 @@
             android:scaleType="fitStart"
             android:src="@drawable/alert"
             android:textColor="@color/black"
-            android:layout_below="@+id/btnGraph"
+            android:layout_below="@+id/btnPerformanceHistory"
             android:layout_alignStart="@+id/btnSyncData"
             android:layout_marginStart="16dp"
             android:layout_marginTop="25dp"/>
@@ -141,7 +139,7 @@
             android:textStyle="bold" />
 
         <ImageButton
-            android:id="@+id/btnGraph"
+            android:id="@+id/btnPerformanceHistory"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/transparent"
@@ -155,7 +153,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignStart="@+id/hexlogo"
-            android:layout_alignTop="@+id/btnGraph"
+            android:layout_alignTop="@+id/btnPerformanceHistory"
             android:layout_marginTop="25dp"
             android:fontFamily="monospace"
             android:text="Performance History"

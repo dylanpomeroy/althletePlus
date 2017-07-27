@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/althletePlus007.iml" filepath="$PROJECT_DIR$/althletePlus007.iml" />
+      <module fileurl="file://$PROJECT_DIR$/althletePlus.iml" filepath="$PROJECT_DIR$/althletePlus.iml" />
+      <module fileurl="file://$PROJECT_DIR$/althletePlus3263763.iml" filepath="$PROJECT_DIR$/althletePlus3263763.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
