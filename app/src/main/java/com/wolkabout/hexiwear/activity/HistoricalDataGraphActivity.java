@@ -26,8 +26,11 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
+import java.nio.DoubleBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -51,14 +54,17 @@ public class HistoricalDataGraphActivity extends Activity {
 
     List<String> readingTypesList = new ArrayList<>();
     List<Reading> readingsList;
+    List<Reading> displayList;
 
     double maxY = 0.0;
     String user = ReadingsActivity.username;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_historical_data_graph);
+
 
         FirebaseApp.initializeApp(this);
         if(user.contains("@")){
@@ -76,8 +82,8 @@ public class HistoricalDataGraphActivity extends Activity {
     public void populateGraph(){
         graph.removeAllSeries();
         LineGraphSeries<DataPoint> series = new LineGraphSeries<>();
-
-        for (Reading reading : readingsList){
+        
+        for (Reading reading : displayList){
             String temp = reading.value;
             if(temp.contains(" ")){
                 temp = temp.substring(0, temp.indexOf(" "));
@@ -85,27 +91,28 @@ public class HistoricalDataGraphActivity extends Activity {
             if(Double.parseDouble(temp) > maxY)
                 maxY = Double.parseDouble(temp);
             DataPoint dp = new DataPoint(reading.timestamp, Double.parseDouble(temp));
-            series.appendData(dp, true, readingsList.size());
+            series.appendData(dp, true, displayList.size());
         }
 
         graph.addSeries(series);
 
-        graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(getApplicationContext(), new SimpleDateFormat("HH:mm:ss")));
-        graph.getGridLabelRenderer().setNumHorizontalLabels(3);
+        graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(getApplicationContext(), new SimpleDateFormat("MMM dd, yyyy")));
+        graph.getGridLabelRenderer().setNumHorizontalLabels(2);
         graph.getGridLabelRenderer().setNumVerticalLabels(5);
 
         graph.getViewport().setMinX(0);
+        graph.getViewport().setMinY(0);
+       // graph.getViewport().setMaxXAxisSize(86400000);
         graph.getViewport().setMaxX(86000000 * 3);
-        graph.getViewport().setMaxY(maxY+1);
 
-        graph.getViewport().setMaxXAxisSize(86400000);
+
+        graph.getViewport().setMaxY(maxY+1);
         graph.getViewport().setScalable(true);
         graph.getViewport().setScalableY(true);
         graph.getViewport().setScrollable(true);
         graph.getViewport().setScrollableY(true);
         graph.getViewport().setXAxisBoundsManual(true);
         graph.getViewport().setYAxisBoundsManual(true);
-        int i = 1;
     }
 
     /**
@@ -131,12 +138,14 @@ public class HistoricalDataGraphActivity extends Activity {
 
     /**
      * This function gets the readings based on the reading type and places them in the
-     * readingsList
+     * readingsList. it then goes through the readingList and adds the average of each day
+     * to the displayList
      */
     @Click(R.id.pushButton)
     public void getReadings(){
         maxY = 0.0;
         readingsList = new ArrayList<>();
+        displayList = new ArrayList<>();
 
         String readingType = readingTypesSpinner.getSelectedItem().toString();
         myRef = mFirebaseDatabase.getReference("Althlete Plus/"+user+"/"+readingType);//Test
@@ -148,8 +157,43 @@ public class HistoricalDataGraphActivity extends Activity {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     Reading reading = ds.getValue(Reading.class);
                     readingsList.add(reading);
-                    populateGraph();
                 }
+                double currday = 0;
+                for(int i = 0; i < readingsList.size(); i++){
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(readingsList.get(i).timestamp);
+                    currday = cal.get(cal.DAY_OF_MONTH);
+
+                    Reading tempr = new Reading();
+                    tempr = readingsList.get(i);
+                    double average = 0.0;
+                    if(readingsList.get(i).value.contains(" "))
+                        average = Double.parseDouble(readingsList.get(i).value.substring(0, readingsList.get(i).value.indexOf(" ")));
+                    else
+                        average = Double.parseDouble(readingsList.get(i).value);
+                    double count = 1.0;
+                    i++;
+
+                    if(i<readingsList.size())
+                        cal.setTime(readingsList.get(i).timestamp);
+
+                    while(currday == (int)cal.get(cal.DAY_OF_MONTH) && i<readingsList.size()){
+                        count+=1.0;
+                        if(readingsList.get(i).value.contains(" "))
+                            average += Double.parseDouble(readingsList.get(i).value.substring(0, readingsList.get(i).value.indexOf(" ")));
+                        else
+                            average += Double.parseDouble(readingsList.get(i).value);
+                        i++;
+                        if(i<readingsList.size())
+                            cal.setTime(readingsList.get(i).timestamp);
+                    }
+
+                    tempr.value = average/count+"";
+                    displayList.add(tempr);
+                    i--;
+                }
+
+                populateGraph();
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
