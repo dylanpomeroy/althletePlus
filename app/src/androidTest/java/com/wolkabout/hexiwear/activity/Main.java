@@ -27,10 +27,16 @@ import static junit.framework.Assert.assertEquals;
 @RunWith(AndroidJUnit4.class)
 public class Main {
 
+    /**
+     * lubes up for some test time
+     */
     @Rule
     public ActivityTestRule<MainActivity_> mActivityRule = new ActivityTestRule<>(
             MainActivity_.class);
 
+    /**
+     * lubes up for some test time
+     */
     @Test
     public void useAppContext() throws Exception {
         // Context of the app under test.
@@ -39,6 +45,9 @@ public class Main {
         assertEquals("com.wolkabout.hexiwear", appContext.getPackageName());
     }
 
+    /**
+     * tests the skip pairing functionality
+     */
     @Test
     public void skipButton()throws Exception{
         onView(withId(R.id.btnSkipPairing)).perform(click());

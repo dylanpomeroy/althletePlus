@@ -58,13 +58,10 @@ public class HistoricalDataTableActivity extends Activity {
     @ViewById(R.id.spnReadings)
     Spinner readingsSpinner;
 
-    String currentReadingType;
-
     List<String> readingTypesList = new ArrayList<>();
     List<Reading> readingsList;
     List<String> readingTimestamps;
     String user = ReadingsActivity.username;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,13 +69,9 @@ public class HistoricalDataTableActivity extends Activity {
         setContentView(R.layout.activity_historical_data_table);
 
         FirebaseApp.initializeApp(this);
-        if(user.contains("@")){
-            user = user.substring(0, user.indexOf("@"));
-        }
+        user = user.split("@")[0];
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         myRef = mFirebaseDatabase.getReference("Althlete Plus/"+user);
-
-
 
         getReadingTypes();
     }
@@ -157,27 +150,5 @@ public class HistoricalDataTableActivity extends Activity {
             public void onCancelled(DatabaseError databaseError) {
             }
         });
-    }
-
-    /**
-     * obtains the data value and sets it to strings
-     * @param dataSnapshot
-     * @param key
-     */
-    private void dataValue(DataSnapshot dataSnapshot, String key) {
-
-        for (DataSnapshot ds : dataSnapshot.getChildren()) { //gets data from firebase
-            FireApp uInfo = new FireApp();
-            uInfo.setNumber1(ds.child(key).getValue(FireApp.class).getNumber1());
-            uInfo.setNumber2(ds.child(key).getValue(FireApp.class).getNumber2());
-            String data1 = String.valueOf(uInfo.getNumber1());
-            String data2 = String.valueOf(uInfo.getNumber2());
-
-            ArrayList<String> array = new ArrayList<>();
-            array.add(data1);
-            array.add(data2);
-
-            pullData.setText(array.toString());
-        }
     }
 }
